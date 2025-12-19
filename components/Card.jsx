@@ -4,23 +4,20 @@ import React from "react";
 
 const Card = ({ img, head, sub, href, alt }) => {
   return (
-    <div
-      className=" lg:w-[15rem] w-[22rem] lg:h-[20rem] h-[30rem] p-3"
-    >
-      <div className="p-8 flex flex-col lg:gap-3 gap-8 text-center justify-center items-center rounded-xl box lg:h-[80%] h-[90%] ">
-        <Link href={href} className="">
+    
+      <div className="p-5 flex flex-col gap-4 text-center rounded-xl shadow bg-white h-full">
+        <Link href={href} className="relative w-full h-40">
           <Image
             src={img}
-            width={90}
-            height={90}
+            width={500}
+            height={500}
             alt={alt}
-            className="rounded-full"
+            className="rounded-lg w-full h-full object-cover "
           ></Image>
         </Link>
         <p className="text-xl text-gray-800 font-semibold">{head}</p>
         <p className="text-xs">{sub}</p>
       </div>
-    </div>
   );
 };
 

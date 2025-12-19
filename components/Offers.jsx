@@ -1,124 +1,93 @@
 "use client";
 import React from "react";
 import Card from "./Card";
-import {
-  Navigation,
-  Pagination,
-  Scrollbar,
-  A11y,
-  Autoplay,
-} from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/autoplay";
+import ButtonMenu from "./ButtonMenu";
 
 const Offers = () => {
   return (
-    <div className="lg:p-6 mt-14">
+    <div className="lg:p-6 mt-14 flex flex-col gap-10">
       <div className="flex flex-col gap-4 justify-center lg:items-center md:items-center items-start lg:text-center md:text-center text-left">
         <p className="text-sm text-green-primary font-medium">
           CE QUE NOUS FAISONS
         </p>
-        <h1 className="lg:text-5xl text-3xl font-extrabold text-gray-800">
-          Nous offrons comme ouverture
+        <h1 className="lg:text-4xl text-2xl font-extrabold text-gray-800">
+          Nous offrons commproduits & services
         </h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum ullam
-          quas, voluptatum tempore dolor hic voluptas. Consequatur ipsa quisquam
-          repellat pariatur tempora laboriosam blanditiis ea deserunt natus!
-          Explicabo, maxime tempora eaque nobis cum fuga? Eius aliquid sint
-          vitae praesentium placeat. Numquam quas praesentium iure eos quos
-          consequatur. Veritatis, voluptates? Magnam.
+        <p className="text-justify">
+          Nous offront comme produits, des meubles de bonne qualité pour vos maisons , bureaux , bars, salle d'audiances
+          et réunions, chambres d'hotels et pour birn d'autres endroits... <br />
+          Nous prestons aussi des services coomme la livraison des meubles achetés chez nous, la maintenance et reparation
+          des vos meubles , et nous proposont des séances de consulataions gratuites pour toutes vos préocupation de toutes
+          genres.
         </p>
       </div>
-      <div className="py-8 flex justify-center ">
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-          spaceBetween={0}
-          centeredSlides={true}
-          loop={true}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          navigation
-          pagination={{ clickable: true, spaceBetween: 200 }}
-          scrollbar={{ draggable: true }}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
-          breakpoints={{
-            // when window width is >= 640px
-            500: {
-              slidesPerView: 1,
-              spaceBetween: 50,
-            },
-            640: {
-                slidesPerView: 2,
-                spaceBetween: 50,
-            },
-            // when window width is >= 768px
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 50,
-            },
-            // when window width is >= 1024px
-            1024: {
-                slidesPerView: 2,
-                spaceBetween: 50,
-            },
-            1244: {
-                slidesPerView: 3,
-                spaceBetween: 50,
-            },
-        }}
-          style={{with:"100%", marginBottom: "20px" }}
-          className="w-full ml-auto mr-auto justify-center"
-        >
-          <SwiperSlide className="lg:ml-[4rem] ml-[0.5rem]  ">
-            <Card
-              img="/images/recrutement.jpg"
-              href="/recrutements"
-              head="Recrutemnts"
-              sub="
-                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum ullam quas, voluptatum tempore"
-              alt="image recrutment"
-            />
-          </SwiperSlide>
-          <SwiperSlide className="">
-            <Card
-              img="/images/tennis.avif"
-              href="/recrutements"
-              head="Recruteurs"
-              sub="
-                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum ullam quas, voluptatum tempore"
-              alt="image recrutment"
-            />
-          </SwiperSlide>
-          
-          <SwiperSlide className="">
-            <Card
-              img="/images/entraineurs.webp"
-              href="/recrutements"
-              head="Entraineurs"
-              sub="
-                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum ullam quas, voluptatum tempore"
-              alt="image recrutment"
-            />
-          </SwiperSlide>
-          <SwiperSlide className="">
-            <Card
-              img="/images/tennis.avif"
-              href="/recrutements"
-              head="Recrutemnts"
-              sub="
-                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum ullam quas, voluptatum tempore"
-              alt="image recrutment"
-            />
-          </SwiperSlide>
-        </Swiper>
+      <div className="flex flex-col gap-8 mb-8">
+        <div className="flex justify-between flex-col gap-3">
+          <p className="text-2xl font-bold text-green-primary">Tables</p>
+          <div className="grid lg:grid-cols-4  grid-cols-2 lg:gap-8 gap-2">
+            <Card head="50$" sub="Table basse" img="/images/Image 14.jpg" href="/meubeles/tables" />
+            <Card head="70$" sub="Table basse" img="/images/Image 34.jpg" href="/meubeles/tables" />
+            <Card head="65$" sub="Table basse" img="/images/Image 35.jpg" href="/meubeles/tables" />
+            <Card head="95$" sub="Table basse" img="/images/Image 36.jpg" href="/meubeles/tables" />
+          </div>
+          <button
+            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary border border-green-primary 
+                    bg-base-primary rounded-lg transition hover:bg-green-primary hover:text-base-primary flex 
+                    justify-center items-center gap-3 lg:self-end self-center "
+          >
+            VOIR PLUS DES MEUBLES
+          </button>
+        </div>
+        <div className="flex justify-between flex-col gap-3">
+          <p className="text-2xl font-bold text-green-primary">Chaises</p>
+          <div className="grid lg:grid-cols-4 grid-cols-2 lg:gap-8 gap-2">
+            <Card head="50$" sub="chaise basse" img="/images/Image 16.jpg" href="/meubeles/tables" />
+            <Card head="30$" sub="chaise basse" img="/images/Image 17.jpg" href="/meubeles/tables" />
+            <Card head="45$" sub="chaise basse" img="/images/Image 18.jpg" href="/meubeles/tables" />
+            <Card head="20$" sub="chaise basse" img="/images/Image 40.jpg" href="/meubeles/tables" />
+          </div>
+          <button
+            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary border border-green-primary 
+                    bg-base-primary rounded-lg transition hover:bg-green-primary hover:text-base-primary flex 
+                    justify-center items-center gap-3 lg:self-end self-center "
+          >
+            VOIR PLUS DES MEUBLES
+          </button>
+        </div>
+        <div className="flex justify-between flex-col gap-3">
+          <p className="text-2xl font-bold text-green-primary">SALONS</p>
+          <div className="grid lg:grid-cols-4 grid-cols-2 lg:gap-8 gap-2">
+            <Card head="500$"  sub="Salle à manger" img="/images/Image 11.jpg" href="/meubeles/tables" />
+            <Card head="1005$" sub="Salle à manger" img="/images/Image 12.jpg" href="/meubeles/tables" />
+            <Card head="955$"  sub="Salle à manger" img="/images/Image 27.jpg" href="/meubeles/tables" />
+            <Card head="700$"  sub="Salle à manger" img="/images/Image 29.jpg" href="/meubeles/tables" />
+          </div>
+          <button
+            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary border border-green-primary 
+                    bg-base-primary rounded-lg transition hover:bg-green-primary hover:text-base-primary flex 
+                    justify-center items-center gap-3 lg:self-end self-center "
+          >
+            VOIR PLUS DES MEUBLES
+          </button>
+        </div>
+        <div className="flex justify-between flex-col gap-3">
+          <p className="text-2xl font-bold text-green-primary">Fauteils & Lits</p>
+          <div className="grid lg:grid-cols-4 grid-cols-2 lg:gap-8 gap-2">
+            <Card head="700$"  sub="Lits à coucher" img="/images/Image 20.jpg" href="/meubeles/tables" />
+            <Card head="1875$" sub="Fauteil pour salon" img="/images/Image 32.jpg" href="/meubeles/tables" />
+            <Card head="865$"  sub="Lits à coucher" img="/images/Image 19.jpg" href="/meubeles/tables" />
+            <Card head="1030$"  sub="Fauteil pour salon" img="/images/Image 33.jpg" href="/meubeles/tables" />
+          </div>
+          <button
+            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary border border-green-primary 
+                    bg-base-primary rounded-lg transition hover:bg-green-primary hover:text-base-primary flex 
+                    justify-center items-center gap-3 lg:self-end self-center "
+          >
+            VOIR PLUS DES MEUBLES
+          </button>
+        </div>
       </div>
-      
+
     </div>
   );
 };

@@ -4,29 +4,22 @@ import React from "react";
 const Athletes = () => {
   return (
     <div
-      className="flex lg:flex-row flex-col bg-teal-700 justify-center lg:gap-9 gap-2 items-center lg:pr-5 pr-0 lg:pb-0 pb-[4rem] text-white
+      className="flex lg:flex-row flex-col bg-teal-700 bg-opacity-65 justify-center lg:gap-9 gap-2 items-center lg:pr-5 pr-0 lg:pb-0 pb-[0.9rem] text-white
      lg:h-auto h-auto mt-[5rem] "
     >
       <Image
-        src="/images/nos attletes@1.25x.png"
+        src="/images/Image 41.jpg"
         width={700}
         height={700}
-        className="hidden lg:block w-full h-full"
+        className="lg:block lg:w-[50%] w-full h-full"
       ></Image>
 
-      <Image
-        src="/images/session@2x.PNG"
-        width={700}
-        height={500}
-        className="lg:hidden block w-full"
-      ></Image>
-
-      <div className=" block  px-6 space-y-4">
-        <p className="text-3xl font-extrabold">Nos Athlètes du moment</p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-          voluptatem molestias dolores ad excepturi est inventore qui
-          accusantium, reprehenderit distinctio!
+      <div className=" block  px-6 lg:space-y-11 space-y-5 lg:w-[50%] w-full ">
+        <p className="text-3xl font-extrabold mt-3">UNE EQUIPE EXPERIMENTEE</p>
+        <p className="text-justify">
+         KIVU ART & CONFORT met à votre disposition une équipe d'ingénieurs et 
+         des techniciens qualifiés pour la conception et la fabrication des vos meubles sur mesure.
+         Une équipe expérimentée qui vous accompagne dans la réalisation de vos projets d'aménagement intérieur.
         </p>
 
         <button

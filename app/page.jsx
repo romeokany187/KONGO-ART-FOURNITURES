@@ -35,50 +35,52 @@ export default function Home() {
   return (
     <main className="">
       <div className="xl:px-[10rem] lg:px-[5rem] md:px-[2rem] px-6">
-      <motion.div
-        ref={heroRef}
-        initial="hidden"
-        animate={heroInView ? "visible" : "hidden"}
-        variants={sectionVariants}
-      >
-        <Hero />
-      </motion.div>
+        <motion.div
+          ref={heroRef}
+          initial="hidden"
+          animate={heroInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <Hero />
+        </motion.div>
+        
+        <motion.div
+          ref={agendaRef}
+          initial="hidden"
+          animate={agendaInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <Agenda />
+        </motion.div>
 
-      <motion.div
-        ref={partenaireRef}
-        initial="hidden"
-        animate={partenaireInView ? "visible" : "hidden"}
-        variants={sectionVariants}
-      >
-        <Partenaire />
-      </motion.div>
+        <motion.div
+          ref={partenaireRef}
+          initial="hidden"
+          animate={partenaireInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <Partenaire />
+        </motion.div>
 
-      <motion.div
-        ref={offersRef}
-        initial="hidden"
-        animate={offersInView ? "visible" : "hidden"}
-        variants={sectionVariants}
-      >
-        <Offers />
-      </motion.div>
-      <motion.div
-        ref={AboutRef}
-        initial="hidden"
-        animate={AboutInView ? "visible" : "hidden"}
-        variants={sectionVariants}
-      >
-        <About />
-      </motion.div>
-      <motion.div
-        ref={agendaRef}
-        initial="hidden"
-        animate={agendaInView ? "visible" : "hidden"}
-        variants={sectionVariants}
-      >
-        <Agenda />
-      </motion.div>
+        <motion.div
+          ref={offersRef}
+          initial="hidden"
+          animate={offersInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <Offers />
+        </motion.div>
+        <motion.div
+          ref={AboutRef}
+          initial="hidden"
+          animate={AboutInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <About />
+        </motion.div>
+        
       </div>
-      
+
       <motion.div
         ref={athletesRef}
         initial="hidden"
@@ -87,7 +89,7 @@ export default function Home() {
       >
         <Athletes />
       </motion.div>
-  
+
       <motion.div
         ref={contactRef}
         initial="hidden"

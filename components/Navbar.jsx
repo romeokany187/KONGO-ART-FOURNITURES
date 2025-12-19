@@ -8,14 +8,14 @@ import ButtonMenu from './ButtonMenu'
 const Navbar = () => {
   return (
     <div className="flex justify-between  py-2 xl:px-[10rem] lg:px-[5rem] md:px-[2rem] px-6 top-0 sticky bg-white z-50">
-      <div className="z-50">
-        <Image src='/images/logomodifier.png' alt="logo" width={60} height={70}></Image>
+      <div className="z-50 lg:text-2xl text-[1rem] font-extrabold italic">
+        KIVU ART <span className='text-green-primary'> & CONFORT</span>
       </div>
-      <div className="lg:flex justify-center items-center lg:gap-8 hidden text-sm " >
+      <div className="lg:flex justify-center items-center lg:gap-8 hidden text-sm  font-bold" >
         <Link href="/">Accueil</Link>
-        <Link href="/athlete">Athlètes</Link>
-        <Link href="/contact">Clubs</Link>
-        <Link href="/count">Compte</Link>
+        <Link href="/athlete">Produits</Link>
+        <Link href="/contact">Services</Link>
+        <Link href="/count">A propos</Link>
       </div>
       <div className="lg:hidden flex">
         <LanguageSwitcher />

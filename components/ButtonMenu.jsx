@@ -54,9 +54,9 @@ const ButtonMenu = () => {
                                     <div className="">
                                         <div className="flex flex-col gap-[1.5rem] font-bold text-base-secondary justify-center items-center">
                                             <Link href="/">Accueil</Link>
-                                            <Link href="/athlete">Athlètes</Link>
-                                            <Link href="/club">Clubs</Link>
-                                            <Link href="/count">Compte</Link>
+                                            <Link href="/athlete">Produits</Link>
+                                            <Link href="/club">Services</Link>
+                                            <Link href="/count">Contact</Link>
                                         </div>
                                     </div>
 
