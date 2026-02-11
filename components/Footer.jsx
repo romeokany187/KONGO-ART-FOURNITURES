@@ -6,7 +6,7 @@ const Footer = () => {
     <div className="lg:flex justify-between grid grid-cols-2 gap-8 grid-flow-row  py-5 lg:px-8 px-4">
       <div className="flex flex-col  items-start space-y-4">
         <div className="z-50 lg:text-2xl text-[1rem] font-extrabold italic">
-          KIVU ART <span className='text-green-primary'> & CONFORT</span>
+          KIVU ART <span className='text-green-primary-600'> & CONFORT</span>
         </div>
         <p className="text-sm">
           Un leader dans la fabrication des meubles sur mesure et l'aménagement

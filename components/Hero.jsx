@@ -70,7 +70,7 @@ const Hero = () => {
       </div>
       <div className="flex flex-col gap-4 lg:w-[50%] w-full ">
         <h1 className="xl:text-6xl lg:text-4xl text-2xl lg:text-start font-extrabold text-black-secondary ">
-          <span className="text-green-primary">EQUIPEZ VOUS CHEZ</span>  <br /> KIVU ART & CONFORT
+          <span className="text-green-primary-600">EQUIPEZ VOUS CHEZ</span>  <br /> KIVU ART & CONFORT
         </h1>
         <p className="lg:text-start text-justify ">
           Mobilier de qualité, conçu avec soin pour allier design, solidité et confort au quotidien.
@@ -79,8 +79,8 @@ const Hero = () => {
         </p>
         <div className="flex lg:flex-row md:flex-row gap-4 justify-center items-center">
           <button
-            className="lg:p-3 lg:px-12 px-6 py-3 text-sm font-medium text-base-secondary border border-green-primary 
-          bg-green-primary rounded-lg transition hover:bg-base-secondary hover:text-green-primary flex justify-center items-center gap-3  "
+            className="lg:p-3 lg:px-12 px-6 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
+          bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600 flex justify-center items-center gap-3  "
           >
             A PROPOS DE NOUS
             <Image
@@ -91,8 +91,8 @@ const Hero = () => {
             ></Image>
           </button>
           <button
-            className="lg:p-3 lg:px-[3.35rem] px-6 py-3 text-sm font-medium text-green-primary border border-green-primary 
-          bg-base-primary rounded-lg transition hover:bg-green-primary hover:text-base-primary flex justify-center items-center gap-3 "
+            className="lg:p-3 lg:px-[3.35rem] px-6 py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
+          bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex justify-center items-center gap-3 "
           >
             NOS OFFRES
             <Image

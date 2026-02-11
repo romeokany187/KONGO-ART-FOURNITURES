@@ -1,6 +1,7 @@
 "use client";
-import { motion, AnimatePresence, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { useInViewAnimation } from "@/hooks/useInViewAnimation";
+import { sectionVariants } from "@/utils/animationVariants";
 
 import Hero from "@/components/Hero";
 import Partenaire from "@/components/Partenaire";
@@ -10,27 +11,15 @@ import Agenda from "@/components/Agenda";
 import Athletes from "@/components/Athletes";
 import Contact from "@/components/Contact";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.5 } },
-};
-
 export default function Home() {
-  const heroRef = useRef(null);
-  const partenaireRef = useRef(null);
-  const offersRef = useRef(null);
-  const AboutRef = useRef(null);
-  const agendaRef = useRef(null);
-  const athletesRef = useRef(null);
-  const contactRef = useRef(null);
-
-  const heroInView = useInView(heroRef, { once: false });
-  const partenaireInView = useInView(partenaireRef, { once: false });
-  const offersInView = useInView(offersRef, { once: false });
-  const AboutInView = useInView(AboutRef, { once: false });
-  const agendaInView = useInView(agendaRef, { once: false });
-  const athletesInView = useInView(athletesRef, { once: false });
-  const contactInView = useInView(contactRef, { once: false });
+  // Utiliser le hook personnalisé pour chaque section
+  const { ref: heroRef, isInView: heroInView } = useInViewAnimation();
+  const { ref: agendaRef, isInView: agendaInView } = useInViewAnimation();
+  const { ref: partenaireRef, isInView: partenaireInView } = useInViewAnimation();
+  const { ref: offersRef, isInView: offersInView } = useInViewAnimation();
+  const { ref: aboutRef, isInView: aboutInView } = useInViewAnimation();
+  const { ref: athletesRef, isInView: athletesInView } = useInViewAnimation();
+  const { ref: contactRef, isInView: contactInView } = useInViewAnimation();
 
   return (
     <main className="">
@@ -71,9 +60,9 @@ export default function Home() {
           <Offers />
         </motion.div>
         <motion.div
-          ref={AboutRef}
+          ref={aboutRef}
           initial="hidden"
-          animate={AboutInView ? "visible" : "hidden"}
+          animate={aboutInView ? "visible" : "hidden"}
           variants={sectionVariants}
         >
           <About />

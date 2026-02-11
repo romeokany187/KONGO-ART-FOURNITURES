@@ -6,7 +6,7 @@ const About = () => {
   return (
     <div className="flex lg:flex-row flex-col justify-between items-center gap-[2rem] mt-8 lg:mb-20 mb-9 ">
       <div className="flex flex-col gap-5 lg:w-[50%] ">
-        <p className="text-green-primary lg:text-xl sm:text-sm font-medium uppercase">Apropos de nous</p>
+        <p className="text-green-primary-600 lg:text-xl sm:text-sm font-medium uppercase">Apropos de nous</p>
         <div className="xl:text-4xl text-xl text-justify font-extrabold">
           KIVU ART & CONFORT est une entreprise qui oeuvre dans la fabrication des meubles
         </div>
@@ -66,7 +66,7 @@ const About = () => {
       </div>
       <Link
           href="/infos"
-          className="underline text-green-primary font-semibold self-start"
+          className="underline text-green-primary-600 font-semibold self-start"
         >
           Pour plus d'infos
         </Link>

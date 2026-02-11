@@ -46,7 +46,7 @@ const ButtonMenu = () => {
                             animate={{ translateY: 0, opacity : 100 }}
                             exit={{ translateY: 0 , opacity : 0}}
                             transition={{ duration: 0.8}}
-                            className="absolute top-[3.2rem] left-0  w-[100%] h-screen bg-green-primary  z-50"
+                            className="absolute top-[3.2rem] left-0  w-[100%] h-screen bg-green-primary-600  z-50"
                         >
                             <>
                                 <div className="z-0 h-[90%] w-full px-8 py-8 flex flex-col justify-center items-center  gap-[10rem] mt-auto">
@@ -54,14 +54,14 @@ const ButtonMenu = () => {
                                     <div className="">
                                         <div className="flex flex-col gap-[1.5rem] font-bold text-base-secondary justify-center items-center">
                                             <Link href="/">Accueil</Link>
-                                            <Link href="/athlete">Produits</Link>
-                                            <Link href="/club">Services</Link>
-                                            <Link href="/count">Contact</Link>
+                                            <Link href="/produits">Produits</Link>
+                                            <Link href="/services">Services</Link>
+                                            <Link href="/a-propos">À propos</Link>
                                         </div>
                                     </div>
 
-                                    <button className="p-2 border-2 bg-base-secondary border-green-primary text-green-primary rounded-lg
-                                        transition ease-in-out hover:bg-green-primary hover:text-white">Contactez-nous</button>
+                                    <button className="p-2 border-2 bg-base-secondary border-green-primary-600 text-green-primary-600 rounded-lg
+                                        transition ease-in-out hover:bg-green-primary-600 hover:text-white">Contactez-nous</button>
                                 </div>
 
                             </>

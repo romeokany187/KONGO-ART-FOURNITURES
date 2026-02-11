@@ -25,8 +25,8 @@ const Contact = () => {
           Nous nous engageons à ne pas spamer
         </p>
         <button
-          className="lg:p-3 px-12 py-3 text-sm font-medium text-base-secondary border border-green-primary 
-          bg-green-primary rounded-lg transition hover:bg-base-secondary hover:text-green-primary"
+          className="lg:p-3 px-12 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
+          bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
         >
           Oui j'adhère
         </button>
