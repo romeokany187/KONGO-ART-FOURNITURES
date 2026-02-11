@@ -36,6 +36,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 =======
-# KIVU-ART-CONFORT
+# KONGO-ART-FOURNITURES
 Un projet pour la création d'une entreprise de fabrication et vente des meubles
 >>>>>>> c6ae981d31b04064d993c13dd08e3ccdc0882ac4

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Agenda = () => {
@@ -9,7 +10,7 @@ const Agenda = () => {
       </div>
       <div className="flex flex-col justify-start items-start space-y-9 pt-11 pb-9 lg:ml-9 ml-0 lg:w-[60%] w-full ">
         <p className="text-sm text-green-primary-600 font-semibold">
-          KAC VOUS PROPOSE DES MEUBELS DE QUALITE
+          KAF VOUS PROPOSE DES MEUBELS DE QUALITE
         </p>
         <p className="xl:text-3xl text-2xl font-extrabold">
           UN LEADER INCONTOURNABLE DANS SON DOMAINE
@@ -37,12 +38,14 @@ const Agenda = () => {
           <p>Laisser un avis</p>
         </div>
 
-        <button
-          className="lg:p-3 px-12 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
-          bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
-        >
-          Visiter  le blog
-        </button>
+        <Link href="/blog">
+          <button
+            className="lg:p-3 px-12 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
+            bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
+          >
+            Visiter  le blog
+          </button>
+        </Link>
       </div>
     </div>
   );

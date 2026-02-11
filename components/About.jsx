@@ -8,7 +8,7 @@ const About = () => {
       <div className="flex flex-col gap-5 lg:w-[50%] ">
         <p className="text-green-primary-600 lg:text-xl sm:text-sm font-medium uppercase">Apropos de nous</p>
         <div className="xl:text-4xl text-xl text-justify font-extrabold">
-          KIVU ART & CONFORT est une entreprise qui oeuvre dans la fabrication des meubles
+          KONGO ART FOURNITURES est une entreprise qui oeuvre dans la fabrication des meubles
         </div>
         <p className="text-justify">
           Nous sommes inscrit dans une logique selon la quelle , nous pouvons bariquer une bonne qualité des meubles
@@ -60,7 +60,7 @@ const About = () => {
           </div>
           <p className="text-xs text-center text-black-primary">
             Transformez <br className="mb-1" /> votre interieur  avec<br />
-            KIVU ART & CONFORT
+            KONGO ART FOURNITURES
           </p>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function AProposPage() {
             À Propos de Nous
           </h1>
           <p className="text-green-100 text-lg max-w-2xl mx-auto">
-            Découvrez l'histoire et la passion qui animent KIVU ART & CONFORT
+            Découvrez l'histoire et la passion qui animent KONGO ART FOURNITURES
           </p>
         </div>
       </motion.section>
@@ -69,7 +69,7 @@ export default function AProposPage() {
               Une passion pour le confort et la qualité
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              Fondée en 2014, KIVU ART & CONFORT est née d'une vision simple : 
+              Fondée en 2014, KONGO ART FOURNITURES est née d'une vision simple : 
               proposer des meubles de qualité supérieure qui allient esthétique, confort et durabilité.
             </p>
             <p className="text-gray-600 leading-relaxed">
@@ -209,7 +209,7 @@ export default function AProposPage() {
               Notre Équipe
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mt-2">
-              Les talents derrière KIVU
+              Les talents derrière KONGO ART FOURNITURES
             </h2>
           </motion.div>
 

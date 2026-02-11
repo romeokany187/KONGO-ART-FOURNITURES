@@ -6,27 +6,27 @@ import Footer from "@/components/Footer";
 const montserrat = Montserrat({ subsets: ["latin"], display: "swap", adjustFontFallback: false});
 
 export const metadata = {
-  title: "KIVU ART & CONFORT - Art, Sport et Confort",
-  description: "Découvrez KIVU ART & CONFORT, votre destination pour l'art, le sport et le bien-être. Explorez nos collections exclusives et nos services premium.",
+  title: "KONGO ART FOURNITURES - Art et Confort",
+  description: "Découvrez KONGO ART FOURNITURES, votre destination pour l'art et le bien-être. Explorez nos collections exclusives et nos services premium.",
   keywords: "art, sport, confort, bien-être, galerie, événements",
-  authors: [{ name: "KIVU ART & CONFORT" }],
+  authors: [{ name: "KONGO ART FOURNITURES" }],
   openGraph: {
-    title: "KIVU ART & CONFORT",
+    title: "KONGO ART FOURNITURES",
     description: "Art, Sport et Confort - Une expérience unique",
     type: "website",
-    url: "https://kivuartconfort.com",
+    url: "https://kongoartfournitures.com",
     images: [
       {
         url: "/assets/og-image.png",
         width: 1200,
         height: 630,
-        alt: "KIVU ART & CONFORT",
+        alt: "KONGO ART FOURNITURES",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "KIVU ART & CONFORT",
+    title: "KONGO ART FOURNITURES",
     description: "Art, Sport et Confort - Une expérience unique",
   },
 };

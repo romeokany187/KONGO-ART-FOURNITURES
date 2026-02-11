@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Contact = () => {
@@ -24,12 +25,14 @@ const Contact = () => {
         <p className="lg:text-xl text-sm font font-medium">
           Nous nous engageons à ne pas spamer
         </p>
-        <button
-          className="lg:p-3 px-12 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
-          bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
-        >
-          Oui j'adhère
-        </button>
+        <Link href="/actualites">
+          <button
+            className="lg:p-3 px-12 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
+            bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
+          >
+            Oui j'adhère
+          </button>
+        </Link>
       </div>
     </div>
   );

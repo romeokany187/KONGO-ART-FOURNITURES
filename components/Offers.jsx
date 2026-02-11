@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import Card from "./Card";
 import ButtonMenu from "./ButtonMenu";
 
@@ -30,13 +31,15 @@ const Offers = () => {
             <Card head="65$" sub="Table basse" img="/images/Image 35.jpg" href="/meubeles/tables" />
             <Card head="95$" sub="Table basse" img="/images/Image 36.jpg" href="/meubeles/tables" />
           </div>
-          <button
-            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
-                    bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
-                    justify-center items-center gap-3 lg:self-end self-center "
-          >
-            VOIR PLUS DES MEUBLES
-          </button>
+          <Link href="/produits">
+            <button
+              className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
+                      bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
+                      justify-center items-center gap-3 lg:self-end self-center "
+            >
+              VOIR PLUS DES MEUBLES
+            </button>
+          </Link>
         </div>
         <div className="flex justify-between flex-col gap-3">
           <p className="text-2xl font-bold text-green-primary-600">Chaises</p>
@@ -46,13 +49,15 @@ const Offers = () => {
             <Card head="45$" sub="chaise basse" img="/images/Image 18.jpg" href="/meubeles/tables" />
             <Card head="20$" sub="chaise basse" img="/images/Image 40.jpg" href="/meubeles/tables" />
           </div>
-          <button
-            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
-                    bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
-                    justify-center items-center gap-3 lg:self-end self-center "
-          >
-            VOIR PLUS DES MEUBLES
-          </button>
+          <Link href="/produits">
+            <button
+              className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
+                      bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
+                      justify-center items-center gap-3 lg:self-end self-center "
+            >
+              VOIR PLUS DES MEUBLES
+            </button>
+          </Link>
         </div>
         <div className="flex justify-between flex-col gap-3">
           <p className="text-2xl font-bold text-green-primary-600">SALONS</p>
@@ -62,13 +67,15 @@ const Offers = () => {
             <Card head="955$"  sub="Salle à manger" img="/images/Image 27.jpg" href="/meubeles/tables" />
             <Card head="700$"  sub="Salle à manger" img="/images/Image 29.jpg" href="/meubeles/tables" />
           </div>
-          <button
-            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
-                    bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
-                    justify-center items-center gap-3 lg:self-end self-center "
-          >
-            VOIR PLUS DES MEUBLES
-          </button>
+          <Link href="/produits">
+            <button
+              className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
+                      bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
+                      justify-center items-center gap-3 lg:self-end self-center "
+            >
+              VOIR PLUS DES MEUBLES
+            </button>
+          </Link>
         </div>
         <div className="flex justify-between flex-col gap-3">
           <p className="text-2xl font-bold text-green-primary-600">Fauteils & Lits</p>
@@ -78,13 +85,15 @@ const Offers = () => {
             <Card head="865$"  sub="Lits à coucher" img="/images/Image 19.jpg" href="/meubeles/tables" />
             <Card head="1030$"  sub="Fauteil pour salon" img="/images/Image 33.jpg" href="/meubeles/tables" />
           </div>
-          <button
-            className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
-                    bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
-                    justify-center items-center gap-3 lg:self-end self-center "
-          >
-            VOIR PLUS DES MEUBLES
-          </button>
+          <Link href="/produits">
+            <button
+              className="lg:p-3 px-[3.35rem] py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
+                      bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex 
+                      justify-center items-center gap-3 lg:self-end self-center "
+            >
+              VOIR PLUS DES MEUBLES
+            </button>
+          </Link>
         </div>
       </div>
 

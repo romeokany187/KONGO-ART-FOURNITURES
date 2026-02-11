@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Hero = () => {
@@ -70,7 +71,7 @@ const Hero = () => {
       </div>
       <div className="flex flex-col gap-4 lg:w-[50%] w-full ">
         <h1 className="xl:text-6xl lg:text-4xl text-2xl lg:text-start font-extrabold text-black-secondary ">
-          <span className="text-green-primary-600">EQUIPEZ VOUS CHEZ</span>  <br /> KIVU ART & CONFORT
+          <span className="text-green-primary-600">EQUIPEZ VOUS CHEZ</span>  <br /> KONGO ART FOURNITURES
         </h1>
         <p className="lg:text-start text-justify ">
           Mobilier de qualité, conçu avec soin pour allier design, solidité et confort au quotidien.
@@ -78,30 +79,34 @@ const Hero = () => {
           votre cadre de vie, avec une attention particulière portée aux finitions et aux matériaux durables.
         </p>
         <div className="flex lg:flex-row md:flex-row gap-4 justify-center items-center">
-          <button
-            className="lg:p-3 lg:px-12 px-6 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
-          bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600 flex justify-center items-center gap-3  "
-          >
-            A PROPOS DE NOUS
-            <Image
-              src="/assets/fleche.svg"
-              alt="avatar"
+          <Link href="/a-propos">
+            <button
+              className="lg:p-3 lg:px-12 px-6 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
+            bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600 flex justify-center items-center gap-3  "
+            >
+              A PROPOS DE NOUS
+              <Image
+                src="/assets/fleche.svg"
+                alt="avatar"
+                width={15}
+                height={15}
+              ></Image>
+            </button>
+          </Link>
+          <Link href="/produits">
+            <button
+              className="lg:p-3 lg:px-[3.35rem] px-6 py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
+            bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex justify-center items-center gap-3 "
+            >
+              NOS OFFRES
+              <Image
+                src="/assets/flecheoth.svg"
+                alt="avatar"
               width={15}
               height={15}
             ></Image>
-          </button>
-          <button
-            className="lg:p-3 lg:px-[3.35rem] px-6 py-3 text-sm font-medium text-green-primary-600 border border-green-primary-600 
-          bg-base-primary rounded-lg transition hover:bg-green-primary-600 hover:text-base-primary flex justify-center items-center gap-3 "
-          >
-            NOS OFFRES
-            <Image
-              src="/assets/flecheoth.svg"
-              alt="avatar"
-              width={15}
-              height={15}
-            ></Image>
-          </button>
+            </button>
+          </Link>
         </div>
       </div>
     </div>

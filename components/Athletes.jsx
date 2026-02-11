@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Athletes = () => {
@@ -17,17 +18,19 @@ const Athletes = () => {
       <div className=" block  px-6 lg:space-y-11 space-y-5 lg:w-[50%] w-full ">
         <p className="text-3xl font-extrabold mt-3">UNE EQUIPE EXPERIMENTEE</p>
         <p className="text-justify">
-         KIVU ART & CONFORT met à votre disposition une équipe d'ingénieurs et 
+         KONGO ART FOURNITURES met à votre disposition une équipe d'ingénieurs et 
          des techniciens qualifiés pour la conception et la fabrication des vos meubles sur mesure.
          Une équipe expérimentée qui vous accompagne dans la réalisation de vos projets d'aménagement intérieur.
         </p>
 
-        <button
-          className="lg:p-3 px-14 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
-          bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
-        >
-          Découvrir
-        </button>
+        <Link href="/team">
+          <button
+            className="lg:p-3 px-14 py-3 text-sm font-medium text-base-secondary border border-green-primary-600 
+            bg-green-primary-600 rounded-lg transition hover:bg-base-secondary hover:text-green-primary-600"
+          >
+            Découvrir
+          </button>
+        </Link>
       </div>
     </div>
   );
