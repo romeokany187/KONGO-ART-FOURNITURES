@@ -1,0 +1,11 @@
+{
+  "watch": ["app", "lib", "prisma", ".env.local"],
+  "ignore": ["node_modules", ".next", "dist"],
+  "ext": "ts,tsx,js,jsx,json",
+  "exec": "next dev",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": 500,
+  "verbose": true
+}

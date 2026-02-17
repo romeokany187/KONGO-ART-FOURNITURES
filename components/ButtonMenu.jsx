@@ -1,5 +1,4 @@
 import React from 'react'
-import { CSSTransition } from 'react-transition-group'
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,20 +19,17 @@ const ButtonMenu = () => {
                 className="flex gap-4 items-center justify-center p-2  text-gray-800 T rounded-md z-50 bg-gray-200 ml-3"
             >
                 <p className="font-bold text-xs">MENU</p>
-                <CSSTransition
-                    in={menuOpen}
-                    timeout={500}
-                    classNames="icon"
+                <motion.div
+                    animate={{ rotate: menuOpen ? 90 : 0 }}
+                    transition={{ duration: 0.3 }}
                 >
-                    <div>
-                        <Image
-                            src={menuOpen ? '/assets/close.svg' : '/assets/menu.svg'}
-                            alt="open menu"
-                            width={17}
-                            height={17}
-                        />
-                    </div>
-                </CSSTransition>
+                    <Image
+                        src={menuOpen ? '/assets/close.svg' : '/assets/menu.svg'}
+                        alt="open menu"
+                        width={17}
+                        height={17}
+                    />
+                </motion.div>
             </button>
 
             <AnimatePresence>

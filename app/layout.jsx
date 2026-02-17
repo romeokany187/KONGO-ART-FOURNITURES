@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { SessionProvider } from "@/app/providers";
 
 const montserrat = Montserrat({ subsets: ["latin"], display: "swap", adjustFontFallback: false});
 
@@ -39,13 +40,15 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${montserrat.className}  relative`}>
-        <Navbar />
-        {children}
-        <div className="">
-          <div className="xl:px-[3rem] lg:px-[3rem] md:px-[2rem] px-0">
-            <Footer />
+        <SessionProvider>
+          <Navbar />
+          {children}
+          <div className="">
+            <div className="xl:px-[3rem] lg:px-[3rem] md:px-[2rem] px-0">
+              <Footer />
+            </div>
           </div>
-        </div>
+        </SessionProvider>
       </body>
     </html>
   );

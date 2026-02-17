@@ -1,5 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { cartApi } from "@/lib/api";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import ProductFilter from "@/components/ProductFilter";
@@ -11,6 +14,22 @@ export default function ProduitsPage() {
   const [priceRange, setPriceRange] = useState(500);
   const [cartCount, setCartCount] = useState(0);
   const [showCartNotification, setShowCartNotification] = useState(false);
+  const { data: session } = useSession();
+
+  useEffect(()=>{
+    async function loadCart(){
+      if (!session) return;
+      try{
+        const res = await cartApi.get();
+        const items = res.data?.items || [];
+        const count = items.reduce((s, it) => s + (it.quantity || 0), 0);
+        setCartCount(count);
+      }catch(err){
+        console.error('Error fetching cart count', err);
+      }
+    }
+    loadCart();
+  },[session]);
 
   // Filtrer et trier les produits
   const filteredProducts = useMemo(() => {
@@ -45,10 +64,30 @@ export default function ProduitsPage() {
     return filtered;
   }, [selectedCategory, selectedSort, priceRange]);
 
-  const handleAddToCart = (product) => {
-    setCartCount((prev) => prev + 1);
-    setShowCartNotification(true);
-    setTimeout(() => setShowCartNotification(false), 2000);
+  const handleAddToCart = async (product) => {
+    try {
+      // If not authenticated, redirect to signin (client-side)
+      if (!session) {
+        window.location.href = '/auth/signin';
+        return;
+      }
+
+      const res = await cartApi.addItem(product.id, 1);
+      // res.data is the updated cart
+      const items = res.data?.items || [];
+      const count = items.reduce((s, it) => s + (it.quantity || 0), 0);
+      setCartCount(count);
+      setShowCartNotification(true);
+      setTimeout(() => setShowCartNotification(false), 2000);
+    } catch (err) {
+      console.error('Add to cart error', err);
+      // If API returned unauthorized, redirect to signin
+      try {
+        if (err.message && err.message.toLowerCase().includes('unauthorized')) {
+          window.location.href = '/auth/signin';
+        }
+      } catch (e) {}
+    }
   };
 
   const containerVariants = {
@@ -125,13 +164,15 @@ export default function ProduitsPage() {
                 {filteredProducts.length} produit{filteredProducts.length !== 1 ? "s" : ""} trouvé{filteredProducts.length !== 1 ? "s" : ""}
               </h2>
               {cartCount > 0 && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="bg-green-primary-600 text-white px-4 py-2 rounded-lg font-semibold"
-                >
-                  Panier: {cartCount} article{cartCount !== 1 ? "s" : ""}
-                </motion.div>
+                <Link href="/cart">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="bg-green-primary-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                  >
+                    Panier: {cartCount} article{cartCount !== 1 ? "s" : ""}
+                  </motion.div>
+                </Link>
               )}
             </div>
 
