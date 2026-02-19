@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "dev:watch": "nodemon --exec \"npm run dev\" --watch app --watch lib --watch prisma --ignore node_modules",
     "dev:nodemon": "nodemon --exec \"next dev\""
   },
