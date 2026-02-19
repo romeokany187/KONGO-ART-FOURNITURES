@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth/next";
-export const dynamic = 'force-dynamic';
 import { redirect } from "next/navigation";
 import EditProductForm from "./EditProductForm";
+
+export const dynamic = 'force-dynamic';
 
 async function fetchProduct(id: string) {
   try {

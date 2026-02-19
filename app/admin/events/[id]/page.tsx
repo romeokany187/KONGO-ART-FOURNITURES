@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth/next";
-export const dynamic = 'force-dynamic';
 import { redirect } from "next/navigation";
 import EditEventForm from "./EditEventForm";
+
+export const dynamic = 'force-dynamic';
 
 async function fetchEvent(id: string) {
   try {
