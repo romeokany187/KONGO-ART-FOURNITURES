@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { useInViewAnimation } from "@/hooks/useInViewAnimation";
 import { sectionVariants } from "@/utils/animationVariants";
 
 import HeroSection from "@/components/HeroSection";
@@ -12,57 +11,48 @@ import TeamSection from "@/components/TeamSection";
 import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function Home() {
-  // Utiliser le hook personnalisé pour chaque section
-  const { ref: heroRef, isInView: heroInView } = useInViewAnimation();
-  const { ref: agendaRef, isInView: agendaInView } = useInViewAnimation();
-  const { ref: partenaireRef, isInView: partenaireInView } = useInViewAnimation();
-  const { ref: offersRef, isInView: offersInView } = useInViewAnimation();
-  const { ref: aboutRef, isInView: aboutInView } = useInViewAnimation();
-  const { ref: athletesRef, isInView: athletesInView } = useInViewAnimation();
-  const { ref: contactRef, isInView: contactInView } = useInViewAnimation();
-
   return (
     <main className="">
       <div className="xl:px-[10rem] lg:px-[5rem] md:px-[2rem] px-6">
         <motion.div
-          ref={heroRef}
-          initial="hidden"
-          animate={heroInView ? "visible" : "hidden"}
+          initial={false}
+          whileInView="visible"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
         >
           <HeroSection />
         </motion.div>
         
         <motion.div
-          ref={agendaRef}
-          initial="hidden"
-          animate={agendaInView ? "visible" : "hidden"}
+          initial={false}
+          whileInView="visible"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
         >
           <HighlightsSection />
         </motion.div>
 
         <motion.div
-          ref={partenaireRef}
-          initial="hidden"
-          animate={partenaireInView ? "visible" : "hidden"}
+          initial={false}
+          whileInView="visible"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
         >
           <PartnersSection />
         </motion.div>
 
         <motion.div
-          ref={offersRef}
-          initial="hidden"
-          animate={offersInView ? "visible" : "hidden"}
+          initial={false}
+          whileInView="visible"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
         >
           <OffersSection />
         </motion.div>
         <motion.div
-          ref={aboutRef}
-          initial="hidden"
-          animate={aboutInView ? "visible" : "hidden"}
+          initial={false}
+          whileInView="visible"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
         >
           <AboutSection />
@@ -71,18 +61,18 @@ export default function Home() {
       </div>
 
       <motion.div
-        ref={athletesRef}
-        initial="hidden"
-        animate={athletesInView ? "visible" : "hidden"}
+        initial={false}
+        whileInView="visible"
+        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         variants={sectionVariants}
       >
         <TeamSection />
       </motion.div>
 
       <motion.div
-        ref={contactRef}
-        initial="hidden"
-        animate={contactInView ? "visible" : "hidden"}
+        initial={false}
+        whileInView="visible"
+        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         variants={sectionVariants}
       >
         <NewsletterSignup />
