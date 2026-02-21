@@ -7,6 +7,7 @@ type Product = {
   name: string;
   price: number;
   category: string;
+  description?: string | null;
   image?: string | null;
   stock?: number | null;
 };
@@ -16,14 +17,9 @@ export default function EditProductForm({ product }: { product: Product }) {
     e.preventDefault();
     const f = e.currentTarget;
     const data = new FormData(f);
-    const payload: Record<string, FormDataEntryValue> = {};
-    data.forEach((v, k) => {
-      payload[k] = v;
-    });
     await fetch(`/api/admin/products/${product.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: data,
     });
     window.location.href = "/admin/products";
   }
@@ -93,6 +89,24 @@ export default function EditProductForm({ product }: { product: Product }) {
       </div>
       <div style={{ marginBottom: 16 }}>
         <label style={{ display: "block", fontWeight: "bold", marginBottom: 8 }}>
+          Description
+        </label>
+        <textarea
+          name="description"
+          rows={4}
+          defaultValue={product.description || ""}
+          style={{
+            width: "100%",
+            padding: "8px 12px",
+            border: "1px solid #cbd5e0",
+            borderRadius: 6,
+            fontSize: 14,
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: "block", fontWeight: "bold", marginBottom: 8 }}>
           URL de l'image
         </label>
         <input
@@ -107,6 +121,12 @@ export default function EditProductForm({ product }: { product: Product }) {
             boxSizing: "border-box",
           }}
         />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: "block", fontWeight: "bold", marginBottom: 8 }}>
+          Image (upload)
+        </label>
+        <input name="imageFile" type="file" accept="image/*" style={{ width: "100%" }} />
       </div>
       <div style={{ marginBottom: 16 }}>
         <label style={{ display: "block", fontWeight: "bold", marginBottom: 8 }}>

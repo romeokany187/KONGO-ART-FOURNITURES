@@ -2,18 +2,20 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { cartApi } from "@/lib/api";
+import { cartApi, productsApi } from "@/lib/api";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import ProductFilter from "@/components/ProductFilter";
-import { products } from "@/utils/products";
 
 export default function ProduitsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedSort, setSelectedSort] = useState("newest");
   const [priceRange, setPriceRange] = useState(500);
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
   const [showCartNotification, setShowCartNotification] = useState(false);
+  const [cartError, setCartError] = useState("");
   const { data: session } = useSession();
 
   useEffect(()=>{
@@ -30,6 +32,20 @@ export default function ProduitsPage() {
     }
     loadCart();
   },[session]);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const res = await productsApi.getAll();
+        setProducts(res.products || []);
+      } catch (err) {
+        console.error("Error fetching products", err);
+      } finally {
+        setProductsLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
 
   // Filtrer et trier les produits
   const filteredProducts = useMemo(() => {
@@ -62,7 +78,7 @@ export default function ProduitsPage() {
     }
 
     return filtered;
-  }, [selectedCategory, selectedSort, priceRange]);
+  }, [products, selectedCategory, selectedSort, priceRange]);
 
   const handleAddToCart = async (product) => {
     try {
@@ -81,6 +97,9 @@ export default function ProduitsPage() {
       setTimeout(() => setShowCartNotification(false), 2000);
     } catch (err) {
       console.error('Add to cart error', err);
+      const message = err?.message || "Erreur lors de l'ajout au panier";
+      setCartError(message);
+      setTimeout(() => setCartError(""), 2500);
       // If API returned unauthorized, redirect to signin
       try {
         if (err.message && err.message.toLowerCase().includes('unauthorized')) {
@@ -140,6 +159,16 @@ export default function ProduitsPage() {
           ✓ Produit ajouté au panier!
         </motion.div>
       )}
+      {cartError && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+        >
+          {cartError}
+        </motion.div>
+      )}
 
       {/* Contenu principal */}
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -177,7 +206,12 @@ export default function ProduitsPage() {
             </div>
 
             {/* Grille de produits */}
-            {filteredProducts.length > 0 ? (
+            {productsLoading ? (
+              <div className="bg-white rounded-lg shadow p-8 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-primary-600 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Chargement des produits...</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <motion.div
                 variants={containerVariants}
                 initial="hidden"

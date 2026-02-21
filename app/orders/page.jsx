@@ -84,7 +84,7 @@ export default function OrdersPage() {
             <p className="text-gray-500 text-lg mb-4">
               Vous n'avez pas encore de commandes
             </p>
-            <Link href="/products">
+              <Link href="/produits">
               <button className="px-6 py-2 bg-green-primary-600 text-white rounded-lg hover:bg-green-primary-700 transition">
                 Explorer nos Produits
               </button>

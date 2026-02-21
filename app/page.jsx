@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { useInViewAnimation } from "@/hooks/useInViewAnimation";
 import { sectionVariants } from "@/utils/animationVariants";
 
-import Hero from "@/components/Hero";
-import Partenaire from "@/components/Partenaire";
-import Offers from "@/components/Offers";
-import About from "@/components/About";
-import Agenda from "@/components/Agenda";
-import Athletes from "@/components/Athletes";
-import Contact from "@/components/Contact";
+import HeroSection from "@/components/HeroSection";
+import PartnersSection from "@/components/PartnersSection";
+import OffersSection from "@/components/OffersSection";
+import AboutSection from "@/components/AboutSection";
+import HighlightsSection from "@/components/HighlightsSection";
+import TeamSection from "@/components/TeamSection";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function Home() {
   // Utiliser le hook personnalisé pour chaque section
@@ -30,7 +30,7 @@ export default function Home() {
           animate={heroInView ? "visible" : "hidden"}
           variants={sectionVariants}
         >
-          <Hero />
+          <HeroSection />
         </motion.div>
         
         <motion.div
@@ -39,7 +39,7 @@ export default function Home() {
           animate={agendaInView ? "visible" : "hidden"}
           variants={sectionVariants}
         >
-          <Agenda />
+          <HighlightsSection />
         </motion.div>
 
         <motion.div
@@ -48,7 +48,7 @@ export default function Home() {
           animate={partenaireInView ? "visible" : "hidden"}
           variants={sectionVariants}
         >
-          <Partenaire />
+          <PartnersSection />
         </motion.div>
 
         <motion.div
@@ -57,7 +57,7 @@ export default function Home() {
           animate={offersInView ? "visible" : "hidden"}
           variants={sectionVariants}
         >
-          <Offers />
+          <OffersSection />
         </motion.div>
         <motion.div
           ref={aboutRef}
@@ -65,7 +65,7 @@ export default function Home() {
           animate={aboutInView ? "visible" : "hidden"}
           variants={sectionVariants}
         >
-          <About />
+          <AboutSection />
         </motion.div>
         
       </div>
@@ -76,7 +76,7 @@ export default function Home() {
         animate={athletesInView ? "visible" : "hidden"}
         variants={sectionVariants}
       >
-        <Athletes />
+        <TeamSection />
       </motion.div>
 
       <motion.div
@@ -85,7 +85,7 @@ export default function Home() {
         animate={contactInView ? "visible" : "hidden"}
         variants={sectionVariants}
       >
-        <Contact />
+        <NewsletterSignup />
       </motion.div>
     </main>
   );

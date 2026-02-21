@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 const ProductCard = ({ product, onAddToCart }) => {
-  const isOutOfStock = product.stock === 0;
+  const isOutOfStock = (product.stock ?? 0) <= 0;
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden h-full flex flex-col">
@@ -39,6 +39,9 @@ const ProductCard = ({ product, onAddToCart }) => {
         <div className="mt-auto">
           <p className="text-2xl font-bold text-green-primary-600 mb-4">
             ${product.price}
+          </p>
+          <p className="text-xs text-gray-600 mb-3">
+            Stock: {product.stock ?? 0}
           </p>
 
           {/* Bouton */}

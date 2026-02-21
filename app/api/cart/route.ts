@@ -44,12 +44,22 @@ export async function POST(request: NextRequest) {
       create: { userId: (session.user as any).id as string },
     });
 
+    const product = await prisma.product.findUnique({ where: { id: productId } });
+    if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
     // Check existing cart item (unique on cartId+productId)
     const existing = await prisma.cartItem.findFirst({ where: { cartId: cart.id, productId } });
     let item;
     if (existing) {
-      item = await prisma.cartItem.update({ where: { id: existing.id }, data: { quantity: existing.quantity + Number(quantity) } });
+      const nextQty = existing.quantity + Number(quantity);
+      if (nextQty > product.stock) {
+        return NextResponse.json({ error: "Stock insuffisant" }, { status: 400 });
+      }
+      item = await prisma.cartItem.update({ where: { id: existing.id }, data: { quantity: nextQty } });
     } else {
+      if (Number(quantity) > product.stock) {
+        return NextResponse.json({ error: "Stock insuffisant" }, { status: 400 });
+      }
       item = await prisma.cartItem.create({ data: { cartId: cart.id, productId, quantity: Number(quantity) } });
     }
 

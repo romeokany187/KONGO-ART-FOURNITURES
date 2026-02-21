@@ -1,6 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "../lib/prisma";
+import dotenv from "dotenv";
 
-const prisma = new PrismaClient();
+dotenv.config({ path: ".env.local" });
+
+if (!process.env.DATABASE_URL && !process.env.PRISMA_DATABASE_URL && !process.env.POSTGRES_URL) {
+  throw new Error("DATABASE_URL is missing. Set it in .env.local before seeding.");
+}
+
+const prisma = getPrisma();
 
 async function main() {
   console.log("🌱 Seeding database...");
@@ -31,6 +38,30 @@ async function main() {
       },
     });
     console.log(`✨ Created admin user: ${admin.email}`);
+  }
+
+  const adminUser = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (!adminUser) {
+    throw new Error("Admin user not found after seed");
+  }
+
+  const productCount = await prisma.product.count();
+  if (productCount === 0) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { products } = require("../utils/products.js");
+    const data = products.map((p: any) => ({
+      name: p.name,
+      description: p.description || null,
+      price: p.price,
+      category: p.category,
+      stock: p.stock ?? 0,
+      image: p.image || null,
+      vendorId: adminUser.id,
+    }));
+    await prisma.product.createMany({ data });
+    console.log(`✨ Seeded ${data.length} products.`);
+  } else {
+    console.log(`ℹ️ Products already seeded (${productCount} found).`);
   }
 
   console.log("🌱 Seeding completed!");

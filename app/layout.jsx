@@ -1,7 +1,7 @@
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SiteNavbar from "@/components/SiteNavbar";
+import SiteFooter from "@/components/SiteFooter";
 import { SessionProvider } from "@/app/providers";
 
 const montserrat = Montserrat({ subsets: ["latin"], display: "swap", adjustFontFallback: false});
@@ -11,6 +11,11 @@ export const metadata = {
   description: "Découvrez KONGO ART FOURNITURES, votre destination pour l'art et le bien-être. Explorez nos collections exclusives et nos services premium.",
   keywords: "art, sport, confort, bien-être, galerie, événements",
   authors: [{ name: "KONGO ART FOURNITURES" }],
+  icons: {
+    icon: "/logo-KAF.ico",
+    shortcut: "/logo-KAF.ico",
+    apple: "/logo-KAF.ico",
+  },
   openGraph: {
     title: "KONGO ART FOURNITURES",
     description: "Art, Sport et Confort - Une expérience unique",
@@ -39,14 +44,14 @@ export default function RootLayout({ children }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${montserrat.className}  relative`}>
+      <body className={`${montserrat.className} relative min-h-screen flex flex-col`}>
         <SessionProvider>
-          <Navbar />
-          {children}
-          <div className="">
-            <div className="xl:px-[3rem] lg:px-[3rem] md:px-[2rem] px-0">
-              <Footer />
-            </div>
+          <SiteNavbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <div className="xl:px-[3rem] lg:px-[3rem] md:px-[2rem] px-0">
+            <SiteFooter />
           </div>
         </SessionProvider>
       </body>

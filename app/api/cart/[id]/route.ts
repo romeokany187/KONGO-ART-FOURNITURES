@@ -24,7 +24,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const body = await request.json();
     const { quantity } = body;
 
-    const existing = await prisma.cartItem.findUnique({ where: { id: params.id }, include: { cart: true } });
+    const existing = await prisma.cartItem.findUnique({ where: { id: params.id }, include: { cart: true, product: true } });
     if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
     if (existing.cart.userId !== (session.user as any).id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
@@ -32,6 +32,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       await prisma.cartItem.delete({ where: { id: params.id } });
       const cart = await prisma.cart.findUnique({ where: { id: existing.cartId }, include: { items: { include: { product: true } } } });
       return NextResponse.json({ success: true, data: cart });
+    }
+
+    if (Number(quantity) > (existing.product?.stock ?? 0)) {
+      return NextResponse.json({ error: "Stock insuffisant" }, { status: 400 });
     }
 
     const updated = await prisma.cartItem.update({ where: { id: params.id }, data: { quantity: Number(quantity) } });

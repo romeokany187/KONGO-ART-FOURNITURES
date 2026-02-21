@@ -16,9 +16,11 @@ export async function getAuthOptions(): Promise<NextAuthOptions> {
       ]);
       PrismaAdapter = imports[0].PrismaAdapter;
       prisma = imports[1].getPrisma();
+      console.log("✓ Prisma initialized successfully for NextAuth");
     } catch (err) {
       // If Prisma or the adapter cannot be loaded, log and continue without persistence.
-      console.error("Prisma/PrismaAdapter init failed, falling back to no-adapter NextAuth:", err);
+      console.error("Prisma/PrismaAdapter init failed, falling back to no-adapter NextAuth:");
+      console.error(err);
       PrismaAdapter = undefined;
       prisma = undefined;
     }
@@ -27,7 +29,7 @@ export async function getAuthOptions(): Promise<NextAuthOptions> {
   }
 
   const options: NextAuthOptions = {
-    adapter: PrismaAdapter ? PrismaAdapter(prisma) : undefined,
+    adapter: (PrismaAdapter && prisma) ? PrismaAdapter(prisma) : undefined,
     providers: [
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -36,29 +38,39 @@ export async function getAuthOptions(): Promise<NextAuthOptions> {
       }),
     ],
     callbacks: {
-      async jwt({ token, user }) {
-        if (user) {
-          token.id = (user as any).id;
-          // Check if user email is the initial admin email
-          const initialAdmin = process.env.INITIAL_ADMIN_EMAIL;
-          token.role = initialAdmin && user.email === initialAdmin ? "ADMIN" : (user as any).role || "USER";
-        }
-        return token;
-      },
-      async session({ session, token }) {
+      async session({ session, user, token }) {
         if (session.user) {
-          session.user.id = token.id as string;
-          session.user.role = token.role as any;
+          // With database strategy, user is from DB
+          if (user) {
+            session.user.id = user.id;
+            session.user.role = (user as any).role || "USER";
+          }
+          // With JWT strategy, use token
+          else if (token) {
+            session.user.id = token.id as string;
+            session.user.role = token.role as any;
+          }
         }
         return session;
+      },
+      async jwt({ token, user }) {
+        // Only needed for JWT strategy
+        if (user) {
+          token.id = user.id;
+          const dbRole = (user as any).role;
+          const initialAdmin = (process.env.INITIAL_ADMIN_EMAIL || "").toLowerCase();
+          const isInitialAdmin = !!initialAdmin && (user.email || "").toLowerCase() === initialAdmin;
+          token.role = dbRole || (isInitialAdmin ? "ADMIN" : "USER");
+        }
+        return token;
       },
     },
     events: {
       async createUser({ user }) {
-        if (!prisma) return; // nothing to do when Prisma unavailable
+        if (!prisma) return;
         try {
-          const initialAdmin = process.env.INITIAL_ADMIN_EMAIL;
-          const role = initialAdmin && user.email === initialAdmin ? "ADMIN" : "USER";
+          const initialAdmin = (process.env.INITIAL_ADMIN_EMAIL || "").toLowerCase();
+          const role = initialAdmin && (user.email || "").toLowerCase() === initialAdmin ? "ADMIN" : "USER";
           await prisma.user.update({ where: { id: user.id }, data: { role } });
         } catch (err) {
           console.error("createUser event error:", err);
@@ -70,7 +82,7 @@ export async function getAuthOptions(): Promise<NextAuthOptions> {
       error: "/auth/error",
     },
     session: {
-      strategy: "jwt",
+      strategy: (PrismaAdapter && prisma) ? "database" : "jwt",
       maxAge: 30 * 24 * 60 * 60,
     },
     secret: process.env.NEXTAUTH_SECRET,

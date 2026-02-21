@@ -10,6 +10,7 @@ export default function CartPage() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   if (status === "loading") {
     return (
@@ -33,6 +34,12 @@ export default function CartPage() {
       const data = await response.json();
       if (data.data) {
         setCart(data.data);
+        const itemIds = data.data.items?.map((item) => item.id) || [];
+        setSelectedIds((prev) => {
+          if (!prev.length) return itemIds;
+          const preserved = prev.filter((id) => itemIds.includes(id));
+          return preserved.length ? preserved : itemIds;
+        });
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -88,6 +95,7 @@ export default function CartPage() {
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemIds: selectedIds }),
       });
 
       if (response.ok) {
@@ -105,8 +113,9 @@ export default function CartPage() {
     }
   };
 
+  const selectedItems = cart?.items.filter((item) => selectedIds.includes(item.id)) || [];
   const subtotal =
-    cart?.items.reduce(
+    selectedItems.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
       0
     ) || 0;
@@ -137,7 +146,7 @@ export default function CartPage() {
         ) : !cart || cart.items.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <p className="text-gray-500 text-lg mb-4">Votre panier est vide</p>
-            <Link href="/products">
+            <Link href="/produits">
               <button className="px-6 py-2 bg-green-primary-600 text-white rounded-lg hover:bg-green-primary-700 transition">
                 Continuer vos Achats
               </button>
@@ -149,9 +158,25 @@ export default function CartPage() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow">
                 <div className="px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-bold text-gray-800">
-                    Articles ({cart.items.length})
-                  </h2>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-bold text-gray-800">
+                      Articles ({cart.items.length})
+                    </h2>
+                    <label className="flex items-center gap-2 text-sm text-gray-600">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.length === cart.items.length}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIds(cart.items.map((item) => item.id));
+                          } else {
+                            setSelectedIds([]);
+                          }
+                        }}
+                      />
+                      Tout sélectionner
+                    </label>
+                  </div>
                 </div>
 
                 <div className="divide-y divide-gray-200">
@@ -160,6 +185,19 @@ export default function CartPage() {
                       key={item.id}
                       className="px-6 py-4 flex gap-4 hover:bg-gray-50"
                     >
+                      <div className="flex items-start pt-1">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(item.id)}
+                          onChange={(e) => {
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, item.id]
+                                : prev.filter((id) => id !== item.id)
+                            );
+                          }}
+                        />
+                      </div>
                       {item.product.image && (
                         <img
                           src={item.product.image}
@@ -245,13 +283,13 @@ export default function CartPage() {
 
                 <button
                   onClick={handleCheckout}
-                  disabled={updating || cart.items.length === 0}
+                  disabled={updating || selectedItems.length === 0}
                   className="w-full px-4 py-3 bg-green-primary-600 text-white rounded-lg hover:bg-green-primary-700 transition font-semibold disabled:opacity-50"
                 >
-                  {updating ? "Traitement..." : "Procéder au Paiement"}
+                  {updating ? "Traitement..." : "Commander la sélection"}
                 </button>
 
-                <Link href="/products" className="block mt-3">
+                <Link href="/produits" className="block mt-3">
                   <button className="w-full px-4 py-3 border border-green-primary-600 text-green-primary-600 rounded-lg hover:bg-green-primary-50 transition font-semibold">
                     Continuer les Achats
                   </button>

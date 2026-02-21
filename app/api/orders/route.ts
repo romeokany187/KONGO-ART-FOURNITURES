@@ -20,27 +20,65 @@ export async function POST(request: NextRequest) {
     if (!session || !session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const prisma = getPrisma();
+    const body = await request.json().catch(() => ({}));
+    const itemIds = Array.isArray(body?.itemIds) ? body.itemIds : [];
+
     // load user's cart
     const cart = await prisma.cart.findUnique({ where: { userId: (session.user as any).id as string }, include: { items: { include: { product: true } } } });
     if (!cart || !cart.items.length) return NextResponse.json({ error: 'Cart empty' }, { status: 400 });
 
-    const total = cart.items.reduce((s, it) => s + it.quantity * it.product.price, 0);
+    const selectedItems = itemIds.length
+      ? cart.items.filter((it) => itemIds.includes(it.id))
+      : cart.items;
 
-    // create order
-    const order = await prisma.order.create({ data: {
-      userId: (session.user as any).id as string,
-      totalPrice: total,
-      status: 'PENDING',
-    }});
-
-    // create order items
-    const itemsData = cart.items.map(it => ({ orderId: order.id, productId: it.productId, quantity: it.quantity, price: it.product.price }));
-    for (const it of itemsData) {
-      await prisma.orderItem.create({ data: it });
+    if (!selectedItems.length) {
+      return NextResponse.json({ error: 'No items selected' }, { status: 400 });
     }
 
-    // clear cart
-    await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+    const total = selectedItems.reduce((s, it) => s + it.quantity * it.product.price, 0);
+
+    // create order + items, then remove only selected items
+    const order = await prisma.$transaction(async (tx) => {
+      const productIds = selectedItems.map((it) => it.productId);
+      const dbProducts = await tx.product.findMany({ where: { id: { in: productIds } } });
+
+      for (const item of selectedItems) {
+        const product = dbProducts.find((p) => p.id === item.productId);
+        if (!product || product.stock < item.quantity) {
+          throw new Error("Stock insuffisant pour un ou plusieurs produits");
+        }
+      }
+
+      const created = await tx.order.create({
+        data: {
+          userId: (session.user as any).id as string,
+          totalPrice: total,
+          status: 'PENDING',
+        },
+      });
+
+      const itemsData = selectedItems.map((it) => ({
+        orderId: created.id,
+        productId: it.productId,
+        quantity: it.quantity,
+        price: it.product.price,
+      }));
+
+      for (const it of itemsData) {
+        await tx.orderItem.create({ data: it });
+      }
+
+      for (const item of selectedItems) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
+
+      await tx.cartItem.deleteMany({ where: { id: { in: selectedItems.map((it) => it.id) } } });
+
+      return created;
+    });
 
     return NextResponse.json({ success: true, id: order.id }, { status: 201 });
   } catch (err) {
