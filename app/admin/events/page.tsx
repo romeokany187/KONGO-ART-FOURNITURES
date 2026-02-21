@@ -38,13 +38,14 @@ export default async function EventsPage() {
             <th style={{ textAlign: 'left', padding: 15, fontWeight: 'bold' }}>Lieu</th>
             <th style={{ textAlign: 'left', padding: 15, fontWeight: 'bold' }}>Début</th>
             <th style={{ textAlign: 'left', padding: 15, fontWeight: 'bold' }}>Fin</th>
+            <th style={{ textAlign: 'left', padding: 15, fontWeight: 'bold' }}>Statut</th>
             <th style={{ textAlign: 'left', padding: 15, fontWeight: 'bold' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {events.length === 0 ? (
             <tr>
-              <td colSpan={5} style={{ padding: 20, textAlign: 'center', color: '#718096' }}>Aucun événement</td>
+              <td colSpan={6} style={{ padding: 20, textAlign: 'center', color: '#718096' }}>Aucun événement</td>
             </tr>
           ) : (
             events.map((e: any) => (
@@ -52,7 +53,8 @@ export default async function EventsPage() {
                 <td style={{ padding: 15 }}>{e.title}</td>
                 <td style={{ padding: 15 }}>{e.location || 'N/A'}</td>
                 <td style={{ padding: 15 }}>{new Date(e.startAt).toLocaleString('fr-FR')}</td>
-                <td style={{ padding: 15 }}>{new Date(e.endAt).toLocaleString('fr-FR')}</td>
+                <td style={{ padding: 15 }}>{e.endAt ? new Date(e.endAt).toLocaleString('fr-FR') : '—'}</td>
+                <td style={{ padding: 15 }}>{e.published ? 'Publié' : 'Brouillon'}</td>
                 <td style={{ padding: 15 }}>
                   <a href={`/admin/events/${e.id}`} style={{ color: '#2b6cb0', textDecoration: 'none', fontWeight: 'bold' }}>Éditer</a>
                 </td>

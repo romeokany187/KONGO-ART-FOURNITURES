@@ -5,9 +5,11 @@ import React from "react";
 type EventData = {
   id: string;
   title: string;
+  description?: string | null;
   location?: string | null;
   startAt: Date | string;
   endAt?: Date | string | null;
+  published?: boolean;
 };
 
 function toLocalDateTime(value: Date | string | null | undefined) {
@@ -19,6 +21,7 @@ function toLocalDateTime(value: Date | string | null | undefined) {
 export default function EditEventForm({ event }: { event: EventData }) {
   const startAtStr = toLocalDateTime(event.startAt);
   const endAtStr = toLocalDateTime(event.endAt || null);
+  const [error, setError] = React.useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,22 +31,40 @@ export default function EditEventForm({ event }: { event: EventData }) {
     data.forEach((v, k) => {
       payload[k] = v;
     });
-    await fetch(`/api/admin/events/${event.id}`, {
+    payload.published = data.get("published") === "on" ? "true" : "";
+
+    const response = await fetch(`/api/admin/events/${event.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      setError(result.error || "Erreur lors de la mise à jour de l'événement");
+      return;
+    }
+
     window.location.href = "/admin/events";
   }
 
   async function handleDelete() {
     if (!confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) return;
-    await fetch(`/api/admin/events/${event.id}`, { method: "DELETE" });
+    const response = await fetch(`/api/admin/events/${event.id}`, { method: "DELETE" });
+    if (!response.ok) {
+      setError("Erreur lors de la suppression de l'événement");
+      return;
+    }
     window.location.href = "/admin/events";
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && (
+        <div style={{ marginBottom: 12, color: "#c53030", fontWeight: 600 }}>
+          {error}
+        </div>
+      )}
       <div style={{ marginBottom: 16 }}>
         <label style={{ display: "block", fontWeight: "bold", marginBottom: 8 }}>
           Titre *
@@ -52,6 +73,24 @@ export default function EditEventForm({ event }: { event: EventData }) {
           name="title"
           defaultValue={event.title}
           required
+          style={{
+            width: "100%",
+            padding: "8px 12px",
+            border: "1px solid #cbd5e0",
+            borderRadius: 6,
+            fontSize: 14,
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: "block", fontWeight: "bold", marginBottom: 8 }}>
+          Description
+        </label>
+        <textarea
+          name="description"
+          rows={4}
+          defaultValue={event.description || ""}
           style={{
             width: "100%",
             padding: "8px 12px",
@@ -116,6 +155,10 @@ export default function EditEventForm({ event }: { event: EventData }) {
           }}
         />
       </div>
+      <label style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+        <input name="published" type="checkbox" defaultChecked={Boolean(event.published)} />
+        Publier cet événement
+      </label>
       <div style={{ display: "flex", gap: 12 }}>
         <button
           type="submit"
