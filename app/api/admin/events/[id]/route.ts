@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+
 async function requireAdmin() {
   const { getAuthOptions } = await import("@/lib/auth");
   const { getServerSession } = await import("next-auth/next");
