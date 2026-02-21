@@ -15,7 +15,7 @@ export default function Home() {
     <main className="">
       <div className="xl:px-[10rem] lg:px-[5rem] md:px-[2rem] px-6">
         <motion.div
-          initial={false}
+          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
@@ -24,7 +24,7 @@ export default function Home() {
         </motion.div>
         
         <motion.div
-          initial={false}
+          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
@@ -33,7 +33,7 @@ export default function Home() {
         </motion.div>
 
         <motion.div
-          initial={false}
+          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
@@ -42,7 +42,7 @@ export default function Home() {
         </motion.div>
 
         <motion.div
-          initial={false}
+          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
@@ -50,7 +50,7 @@ export default function Home() {
           <OffersSection />
         </motion.div>
         <motion.div
-          initial={false}
+          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           variants={sectionVariants}
@@ -61,7 +61,7 @@ export default function Home() {
       </div>
 
       <motion.div
-        initial={false}
+        initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         variants={sectionVariants}
@@ -70,7 +70,7 @@ export default function Home() {
       </motion.div>
 
       <motion.div
-        initial={false}
+        initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         variants={sectionVariants}
