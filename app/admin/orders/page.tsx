@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 export const dynamic = 'force-dynamic';
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 async function fetchOrders() {
   try {
@@ -35,6 +36,7 @@ export default async function OrdersPage() {
             <th style={{ textAlign: 'left', padding: 12 }}>Total</th>
             <th style={{ textAlign: 'left', padding: 12 }}>Statut</th>
             <th style={{ textAlign: 'left', padding: 12 }}>Date</th>
+            <th style={{ textAlign: 'left', padding: 12 }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +52,11 @@ export default async function OrdersPage() {
                 </span>
               </td>
               <td style={{ padding: 12 }}>{new Date(o.createdAt).toLocaleDateString()}</td>
+              <td style={{ padding: 12 }}>
+                <Link href={`/admin/orders/${o.id}`} style={{ color: '#16a34a', fontWeight: 600 }}>
+                  Voir
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

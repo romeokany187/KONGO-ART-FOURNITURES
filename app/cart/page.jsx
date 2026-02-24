@@ -1,12 +1,13 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function CartPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -100,8 +101,7 @@ export default function CartPage() {
 
       if (response.ok) {
         alert("Commande créée avec succès!");
-        fetchCart();
-        redirect("/orders");
+        router.push("/orders");
       } else {
         alert("Erreur lors de la création de la commande");
       }

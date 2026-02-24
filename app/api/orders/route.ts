@@ -5,12 +5,28 @@ import { getAuthOptions } from "@/lib/auth";
 
 export async function GET() {
   try {
+    const session = await getServerSession(await getAuthOptions());
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = (session.user as any).id as string;
+    const isAdmin = (session.user as any).role === "ADMIN";
+
     const prisma = getPrisma();
-    const orders = await prisma.order.findMany({ include: { items: true } });
-    return NextResponse.json({ orders });
+    const orders = await prisma.order.findMany({
+      where: isAdmin ? undefined : { userId },
+      include: {
+        user: true,
+        items: { include: { product: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({ data: orders });
   } catch (err) {
     console.error('GET /api/orders error', err);
-    return NextResponse.json({ orders: [] }, { status: 500 });
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }
 
@@ -22,6 +38,8 @@ export async function POST(request: NextRequest) {
     const prisma = getPrisma();
     const body = await request.json().catch(() => ({}));
     const itemIds = Array.isArray(body?.itemIds) ? body.itemIds : [];
+    const shippingAddress = typeof body?.shippingAddress === "string" ? body.shippingAddress.trim() : null;
+    const paymentMethod = typeof body?.paymentMethod === "string" ? body.paymentMethod.trim() : null;
 
     // load user's cart
     const cart = await prisma.cart.findUnique({ where: { userId: (session.user as any).id as string }, include: { items: { include: { product: true } } } });
@@ -54,6 +72,8 @@ export async function POST(request: NextRequest) {
           userId: (session.user as any).id as string,
           totalPrice: total,
           status: 'PENDING',
+          shippingAddress: shippingAddress || null,
+          paymentMethod: paymentMethod || null,
         },
       });
 
