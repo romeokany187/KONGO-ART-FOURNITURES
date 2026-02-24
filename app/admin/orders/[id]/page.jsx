@@ -20,7 +20,8 @@ export default function OrderDetailsPage({ params }) {
     );
   }
 
-  if (!session || (session.user)?.role !== "ADMIN") {
+  const role = (session?.user)?.role;
+  if (!session || (role !== "ADMIN" && role !== "VENDOR")) {
     redirect("/dashboard");
   }
 
@@ -61,6 +62,31 @@ export default function OrderDetailsPage({ params }) {
     } catch (error) {
       console.error("Error updating status:", error);
       alert("Erreur lors de la mise à jour");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleValidateOrder = async () => {
+    setNewStatus("PROCESSING");
+    setUpdating(true);
+    try {
+      const response = await fetch(`/api/orders/${params.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "PROCESSING" }),
+      });
+
+      if (response.ok) {
+        alert("Commande validée et notifications envoyées");
+        fetchOrder();
+      } else {
+        const data = await response.json().catch(() => ({}));
+        alert(data.error || "Erreur lors de la validation");
+      }
+    } catch (error) {
+      console.error("Error validating order:", error);
+      alert("Erreur lors de la validation");
     } finally {
       setUpdating(false);
     }
@@ -197,6 +223,15 @@ export default function OrderDetailsPage({ params }) {
               >
                 {updating ? "Mise à jour..." : "Mettre à Jour"}
               </button>
+              {order.status === "PENDING" && (
+                <button
+                  onClick={handleValidateOrder}
+                  disabled={updating}
+                  className="w-full mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 font-semibold"
+                >
+                  {updating ? "Validation..." : "Valider la commande"}
+                </button>
+              )}
             </div>
 
             {/* Order Summary */}

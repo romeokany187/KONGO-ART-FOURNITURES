@@ -3,26 +3,49 @@ export const dynamic = 'force-dynamic';
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-async function fetchOrders() {
+async function fetchOrders(userId: string, role: string) {
   try {
     const { getPrisma } = await import("@/lib/prisma");
     const prisma = getPrisma();
-    return prisma.order.findMany({ include: { user: true, items: { include: { product: true } } }, orderBy: { createdAt: 'desc' } });
+    const where = role === "ADMIN"
+      ? undefined
+      : {
+          items: {
+            some: {
+              product: {
+                vendorId: userId,
+              },
+            },
+          },
+        };
+
+    return prisma.order.findMany({
+      where,
+      include: { user: true, items: { include: { product: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
   } catch (err) {
     return [];
   }
 }
 
 export default async function OrdersPage() {
+  let userId = "";
+  let role = "";
+
   try {
     const { getAuthOptions } = await import("@/lib/auth");
     const session = await getServerSession(await getAuthOptions());
-    if (!session || (session.user as any).role !== "ADMIN") redirect("/");
+    if (!session) redirect("/");
+
+    role = (session.user as any).role;
+    userId = (session.user as any).id;
+    if (role !== "ADMIN" && role !== "VENDOR") redirect("/");
   } catch (err) {
     redirect("/");
   }
 
-  const orders = await fetchOrders();
+  const orders = await fetchOrders(userId, role);
 
   return (
     <div style={{ padding: 20 }}>

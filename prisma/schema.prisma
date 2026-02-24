@@ -31,8 +31,30 @@ model User {
   products              Product[]
   sessions              Session[]
   events                Event[]
+  notifications         Notification[] @relation("UserNotifications")
 
   @@index([email])
+}
+
+enum NotificationType {
+  ORDER_VALIDATED
+  STOCK_ALERT
+}
+
+model Notification {
+  id              String           @id @default(cuid())
+  recipientUserId String
+  recipientUser   User             @relation("UserNotifications", fields: [recipientUserId], references: [id], onDelete: Cascade)
+  type            NotificationType
+  title           String
+  message         String
+  isRead          Boolean          @default(false)
+  orderId         String?
+  order           Order?           @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  createdAt       DateTime         @default(now())
+
+  @@index([recipientUserId, isRead, createdAt])
+  @@index([orderId])
 }
 
 // Account model for NextAuth OAuth
@@ -137,6 +159,7 @@ model Order {
 
   // Relations
   items         OrderItem[]
+  notifications Notification[]
 
   @@index([userId])
   @@index([status])
