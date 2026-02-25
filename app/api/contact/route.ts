@@ -16,7 +16,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
     }
 
-    const recipient = process.env.COMPANY_EMAIL || process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+    const recipient =
+      process.env.COMPANY_EMAIL ||
+      process.env.ADMIN_EMAIL ||
+      process.env.INITIAL_ADMIN_EMAIL ||
+      process.env.MAIL_FROM ||
+      process.env.SMTP_USER;
     if (!recipient) {
       return NextResponse.json({ error: "Email entreprise non configuré" }, { status: 500 });
     }
