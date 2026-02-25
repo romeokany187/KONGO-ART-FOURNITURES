@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ContactPage() {
+  const { data: session } = useSession();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +19,11 @@ export default function ContactPage() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          email: session?.user?.email || form.email,
+          name: form.name || session?.user?.name || "",
+        }),
       });
       const data = await response.json().catch(() => ({}));
 
@@ -60,9 +66,10 @@ export default function ContactPage() {
               type="email"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               name="email"
-              value={form.email}
+              value={session?.user?.email || form.email}
               onChange={onChange}
-              required
+              required={!session?.user?.email}
+              disabled={!!session?.user?.email}
             />
           </div>
 

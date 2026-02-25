@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mailer";
+import { getServerSession } from "next-auth/next";
+import { getAuthOptions } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(await getAuthOptions());
     const body = await request.json().catch(() => ({}));
-    const name = typeof body?.name === "string" ? body.name.trim() : "";
-    const email = typeof body?.email === "string" ? body.email.trim() : "";
+    const name =
+      typeof body?.name === "string" && body.name.trim()
+        ? body.name.trim()
+        : (session?.user?.name || "");
+    const email =
+      typeof body?.email === "string" && body.email.trim()
+        ? body.email.trim()
+        : (session?.user?.email || "");
     const subject = typeof body?.subject === "string" ? body.subject.trim() : "";
     const message = typeof body?.message === "string" ? body.message.trim() : "";
 
