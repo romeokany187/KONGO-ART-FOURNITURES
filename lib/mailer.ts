@@ -5,6 +5,8 @@ type MailParams = {
   subject: string;
   text: string;
   html?: string;
+  from?: string;
+  replyTo?: string;
 };
 
 function getTransporter() {
@@ -30,7 +32,8 @@ function getTransporter() {
 
 export async function sendEmail(params: MailParams) {
   const transporter = getTransporter();
-  const from = process.env.MAIL_FROM || process.env.SMTP_USER;
+  const defaultFrom = process.env.MAIL_FROM || process.env.SMTP_USER;
+  const from = params.from || defaultFrom;
 
   if (!transporter || !from) {
     return { ok: false, error: "Mailer not configured" };
@@ -43,6 +46,7 @@ export async function sendEmail(params: MailParams) {
       subject: params.subject,
       text: params.text,
       html: params.html,
+      replyTo: params.replyTo,
     });
     return { ok: true };
   } catch (error: any) {

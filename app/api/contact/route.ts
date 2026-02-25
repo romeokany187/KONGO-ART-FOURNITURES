@@ -43,7 +43,14 @@ export async function POST(request: NextRequest) {
       <p><strong>Message:</strong><br/>${message.replace(/\n/g, "<br/>")}</p>
     `;
 
-    const result = await sendEmail({ to: recipient, subject: `[Contact] ${subject}`, text, html });
+    const result = await sendEmail({
+      to: recipient,
+      subject: `[Contact] ${subject}`,
+      text,
+      html,
+      from: `${name} <${email}>`,
+      replyTo: email,
+    });
     if (!result.ok) {
       return NextResponse.json({ error: result.error || "Erreur envoi" }, { status: 500 });
     }
