@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 
 export default function SettingsPage() {
@@ -11,6 +11,19 @@ export default function SettingsPage() {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const loadNotifications = async () => {
+    try {
+      const response = await fetch("/api/notifications");
+      const data = await response.json();
+      if (response.ok && Array.isArray(data.data)) {
+        setNotifications(data.data);
+      }
+    } catch (error) {
+      console.error("Error loading notifications", error);
+    }
+  };
 
   if (status === "loading") {
     return (
@@ -23,6 +36,12 @@ export default function SettingsPage() {
   if (!session) {
     redirect("/auth/signin");
   }
+
+  useEffect(() => {
+    if (activeTab === "notifications") {
+      loadNotifications();
+    }
+  }, [activeTab]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -164,6 +183,25 @@ export default function SettingsPage() {
                   <button className="mt-4 px-4 py-2 text-red-600 hover:text-red-700 font-semibold">
                     Déconnecter tous les autres appareils
                   </button>
+                </div>
+
+                <div className="border border-gray-200 rounded-lg p-6">
+                  <h3 className="font-semibold text-gray-800 mb-3">Historique des notifications</h3>
+                  {notifications.length === 0 ? (
+                    <p className="text-sm text-gray-600">Aucune notification pour le moment.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {notifications.map((notification) => (
+                        <div key={notification.id} className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                          <p className="text-sm font-semibold text-gray-800">{notification.title}</p>
+                          <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {new Date(notification.createdAt).toLocaleString("fr-FR")}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 

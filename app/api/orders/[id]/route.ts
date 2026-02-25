@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { getAuthOptions } from "@/lib/auth";
+import { sendEmail } from "@/lib/mailer";
 
 const ALLOWED_STATUSES = [
   "PENDING",
@@ -13,6 +14,8 @@ const ALLOWED_STATUSES = [
 ] as const;
 
 const VALIDATOR_ROLES = new Set(["ADMIN", "VENDOR"]);
+
+export const runtime = "nodejs";
 
 export async function GET(
   _request: NextRequest,
@@ -175,6 +178,17 @@ export async function PUT(
 
       return order;
     });
+
+    if (validationTransition && updated.user?.email) {
+      const subject = `Commande #${updated.id.slice(0, 8)} validée`;
+      const text = `Bonjour ${updated.user.name || ""},\n\nVotre commande #${updated.id.slice(0, 8)} a été validée et est maintenant en traitement.\n\nMerci pour votre confiance.`;
+      await sendEmail({
+        to: updated.user.email,
+        subject,
+        text,
+        html: `<p>Bonjour ${updated.user.name || ""},</p><p>Votre commande <strong>#${updated.id.slice(0, 8)}</strong> a été validée et est maintenant en traitement.</p><p>Merci pour votre confiance.</p>`,
+      });
+    }
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
