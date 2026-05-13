@@ -24,6 +24,12 @@ const page = ({ searchParams }) => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
       <h1 className="text-3xl font-extrabold">Espace Services et Labo</h1>
+      <a
+        href="/lab/csrf-attacker"
+        className="inline-block rounded-lg border border-black px-4 py-2 text-sm"
+      >
+        Ouvrir simulateur CSRF
+      </a>
 
       {saved || savedReview || savedService ? (
         <p className="rounded-lg border border-green-300 bg-green-50 p-3 text-green-800">
