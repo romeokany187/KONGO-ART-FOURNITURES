@@ -1,10 +1,13 @@
-import { addSubmission, searchSubmissionsUnsafe } from "@/lib/labContactStore";
+import {
+  addContactSubmission,
+  searchContactSubmissionsUnsafe,
+} from "@/lib/labContactStore";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") || "";
 
-  const results = searchSubmissionsUnsafe(search);
+  const results = searchContactSubmissionsUnsafe(search);
 
   return Response.json({
     ok: true,
@@ -25,7 +28,7 @@ export async function POST(request) {
     // Intentionally vulnerable lab behavior:
     // - no CSRF validation
     // - no sanitization before storage
-    addSubmission({ name, email, message });
+    addContactSubmission({ name, email, message });
 
     return Response.redirect(new URL("/contact?saved=1", request.url), 303);
   } catch (error) {
