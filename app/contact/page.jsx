@@ -8,226 +8,187 @@ import {
 export const dynamic = "force-dynamic";
 
 const page = ({ searchParams }) => {
-  const contactSearch = searchParams?.contactSearch || "";
-  const reviewSearch = searchParams?.reviewSearch || "";
-  const serviceSearch = searchParams?.serviceSearch || "";
-
-  const saved = searchParams?.saved === "1";
-  const savedReview = searchParams?.savedReview === "1";
-  const savedService = searchParams?.savedService === "1";
-  const reflected = searchParams?.reflected || "";
+  const contactSearch = searchParams?.q || "";
+  const reviewSearch = searchParams?.filter || "";
+  const serviceSearch = searchParams?.s || "";
+  const reflected = searchParams?.ref || "";
 
   const contactEntries = searchContactSubmissionsUnsafe(contactSearch);
   const reviewEntries = searchReviewsUnsafe(reviewSearch);
   const serviceEntries = searchServiceRequestsUnsafe(serviceSearch);
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
-      <h1 className="text-3xl font-extrabold">Espace Services et Labo</h1>
-      <a
-        href="/lab/csrf-attacker"
-        className="inline-block rounded-lg border border-black px-4 py-2 text-sm"
-      >
-        Ouvrir simulateur CSRF
-      </a>
-
-      {saved || savedReview || savedService ? (
-        <p className="rounded-lg border border-green-300 bg-green-50 p-3 text-green-800">
-          Donnee enregistree.
-        </p>
-      ) : null}
+    <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+      <h1 className="text-4xl font-extrabold text-center">Nous contacter</h1>
 
       {reflected ? (
         <div
-          className="rounded-lg border border-red-300 bg-red-50 p-3"
+          className="rounded-lg p-4 bg-gray-100"
           dangerouslySetInnerHTML={{ __html: reflected }}
         />
       ) : null}
 
-      <section className="space-y-3 rounded-xl border border-gray-200 p-4">
-        <h2 className="text-xl font-bold">1. Contact commercial</h2>
+      <section className="space-y-4">
+        <h2 className="text-2xl font-bold">Formulaire de contact</h2>
+        <p className="text-gray-600">
+          Envoyez-nous votre message, nous vous répondrons dans les plus brefs délais.
+        </p>
 
-        <form action="/api/contact" method="POST" className="grid gap-2">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nom"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <textarea
-            name="message"
-            placeholder="Message"
-            rows={3}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <button type="submit" className="rounded-lg bg-black text-white px-5 py-3">
+        <form action="/api/contact" method="POST" className="grid gap-4 bg-gray-50 p-6 rounded-lg">
+          <div>
+            <label className="block text-sm font-semibold mb-1">Nom complet</label>
+            <input
+              type="text"
+              name="name"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Votre message</label>
+            <textarea
+              name="message"
+              rows={5}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <button type="submit" className="rounded-lg bg-green-600 text-white px-6 py-3 font-semibold hover:bg-green-700">
             Envoyer
           </button>
         </form>
 
-        <form method="GET" className="flex flex-col sm:flex-row gap-2">
-          <input
-            type="text"
-            name="contactSearch"
-            defaultValue={contactSearch}
-            placeholder="Recherche contact (test SQLi: ' OR '1'='1)"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-          />
-          <button type="submit" className="rounded-lg bg-black text-white px-5 py-3">
-            Filtrer
-          </button>
-        </form>
-
-        <div className="space-y-3">
-          {contactEntries.length === 0 ? (
-            <p className="text-gray-500">Aucun message contact.</p>
-          ) : (
-            contactEntries.map((item) => (
-              <article key={item.id} className="rounded-xl border border-gray-200 p-4 space-y-2">
-                <p className="text-sm text-gray-500">{item.createdAt}</p>
-                <p className="font-semibold">{item.name} - {item.email}</p>
+        {contactEntries.length > 0 && (
+          <div className="space-y-3 mt-6">
+            <h3 className="font-semibold">Derniers messages reçus</h3>
+            {contactEntries.map((item) => (
+              <article key={item.id} className="border-l-4 border-green-600 pl-4 py-2">
+                <p className="font-semibold text-sm">{item.name}</p>
                 <div
-                  className="prose max-w-none"
+                  className="text-sm text-gray-700 mt-1"
                   dangerouslySetInnerHTML={{ __html: item.message || "" }}
                 />
               </article>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
-      <section className="space-y-3 rounded-xl border border-gray-200 p-4">
-        <h2 className="text-xl font-bold">2. Avis clients</h2>
+      <section className="space-y-4">
+        <h2 className="text-2xl font-bold">Avis clients</h2>
+        <p className="text-gray-600">
+          Partagez votre expérience avec notre équipe et nos services.
+        </p>
 
-        <form action="/api/reviews" method="POST" className="grid gap-2">
-          <input
-            type="text"
-            name="author"
-            placeholder="Auteur"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <textarea
-            name="content"
-            placeholder="Avis"
-            rows={3}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <button type="submit" className="rounded-lg bg-black text-white px-5 py-3">
+        <form action="/api/reviews" method="POST" className="grid gap-4 bg-gray-50 p-6 rounded-lg">
+          <div>
+            <label className="block text-sm font-semibold mb-1">Votre nom</label>
+            <input
+              type="text"
+              name="author"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Votre avis</label>
+            <textarea
+              name="content"
+              rows={4}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <button type="submit" className="rounded-lg bg-green-600 text-white px-6 py-3 font-semibold hover:bg-green-700">
             Publier l'avis
           </button>
         </form>
 
-        <form method="GET" className="flex flex-col sm:flex-row gap-2">
-          <input
-            type="text"
-            name="reviewSearch"
-            defaultValue={reviewSearch}
-            placeholder="Recherche avis (test SQLi: ' OR '1'='1)"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-          />
-          <button type="submit" className="rounded-lg bg-black text-white px-5 py-3">
-            Filtrer
-          </button>
-        </form>
-
-        <div className="space-y-3">
-          {reviewEntries.length === 0 ? (
-            <p className="text-gray-500">Aucun avis.</p>
-          ) : (
-            reviewEntries.map((item) => (
-              <article key={item.id} className="rounded-xl border border-gray-200 p-4 space-y-2">
-                <p className="text-sm text-gray-500">{item.createdAt}</p>
-                <p className="font-semibold">{item.author}</p>
+        {reviewEntries.length > 0 && (
+          <div className="space-y-3 mt-6">
+            <h3 className="font-semibold">Témoignages clients</h3>
+            {reviewEntries.map((item) => (
+              <article key={item.id} className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+                <p className="font-semibold text-sm">{item.author}</p>
                 <div
-                  className="prose max-w-none"
+                  className="text-sm text-gray-700 mt-2"
                   dangerouslySetInnerHTML={{ __html: item.content || "" }}
                 />
               </article>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
-      <section className="space-y-3 rounded-xl border border-gray-200 p-4">
-        <h2 className="text-xl font-bold">3. Demande de service</h2>
+      <section className="space-y-4">
+        <h2 className="text-2xl font-bold">Demande de devis</h2>
+        <p className="text-gray-600">
+          Besoin d'un devis pour vos meubles ou services ? Remplissez ce formulaire.
+        </p>
 
-        <form action="/api/service-request" method="POST" className="grid gap-2">
-          <input
-            type="text"
-            name="client"
-            placeholder="Client"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <input
-            type="text"
-            name="service"
-            placeholder="Type de service"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <textarea
-            name="details"
-            placeholder="Details"
-            rows={3}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            required
-          />
-          <button type="submit" className="rounded-lg bg-black text-white px-5 py-3">
-            Envoyer la demande
+        <form action="/api/service-request" method="POST" className="grid gap-4 bg-gray-50 p-6 rounded-lg">
+          <div>
+            <label className="block text-sm font-semibold mb-1">Nom du client</label>
+            <input
+              type="text"
+              name="client"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Type de demande</label>
+            <input
+              type="text"
+              name="service"
+              placeholder="Ex: Mobilier sur mesure, Consultation, Livraison"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-1">Description détaillée</label>
+            <textarea
+              name="details"
+              rows={4}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3"
+              required
+            />
+          </div>
+          <button type="submit" className="rounded-lg bg-green-600 text-white px-6 py-3 font-semibold hover:bg-green-700">
+            Envoyer le devis
           </button>
         </form>
 
-        <form method="GET" className="grid gap-2">
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              name="serviceSearch"
-              defaultValue={serviceSearch}
-              placeholder="Recherche demandes (test SQLi: ' OR '1'='1)"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3"
-            />
-            <button type="submit" className="rounded-lg bg-black text-white px-5 py-3">
-              Filtrer
-            </button>
-          </div>
-          <input
-            type="text"
-            name="reflected"
-            defaultValue={reflected}
-            placeholder="Test XSS reflechie (ex: <img src=x onerror=alert('reflected')>)"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3"
-          />
-        </form>
-
-        <div className="space-y-3">
-          {serviceEntries.length === 0 ? (
-            <p className="text-gray-500">Aucune demande.</p>
-          ) : (
-            serviceEntries.map((item) => (
-              <article key={item.id} className="rounded-xl border border-gray-200 p-4 space-y-2">
-                <p className="text-sm text-gray-500">{item.createdAt}</p>
-                <p className="font-semibold">{item.client} - {item.service}</p>
+        {serviceEntries.length > 0 && (
+          <div className="space-y-3 mt-6">
+            <h3 className="font-semibold">Devis en cours de traitement</h3>
+            {serviceEntries.map((item) => (
+              <article key={item.id} className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-600">
+                <p className="font-semibold text-sm">{item.client} - {item.service}</p>
                 <div
-                  className="prose max-w-none"
+                  className="text-sm text-gray-700 mt-2"
                   dangerouslySetInnerHTML={{ __html: item.details || "" }}
                 />
               </article>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
+
+      <div className="text-center text-gray-600 text-sm mt-12 pt-8 border-t">
+        <p>Ou contactez-nous directement :</p>
+        <p className="font-semibold">+243 XXX XXX XXX | contact@kivu-art.com</p>
+      </div>
     </div>
   );
 };
