@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function ActualitesPage() {
   const news = [
@@ -49,23 +50,41 @@ export default function ActualitesPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Hero */}
       <motion.section
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-gradient-to-r from-green-primary-600 to-green-primary-700 text-white py-16 px-6"
+        className="bg-gradient-to-r from-green-primary-600 via-green-primary-700 to-emerald-700 text-white py-16 px-6"
       >
         <div className="max-w-7xl mx-auto text-center">
+          <p className="uppercase tracking-[0.25em] text-xs font-semibold text-green-100 mb-3">
+            Centre d'information
+          </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Actualités</h1>
-          <p className="text-green-primary-100 text-lg max-w-2xl mx-auto">
-            Suivez les dernières nouvelles de KONGO ART FOURNITURES
+          <p className="text-green-100 text-lg max-w-3xl mx-auto">
+            Toutes les annonces importantes sur nos collections, nos ouvertures et nos collaborations.
           </p>
         </div>
       </motion.section>
 
-      {/* News List */}
       <section className="max-w-4xl mx-auto px-6 py-16">
+        <div className="mb-10 bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3">
+            <button className="px-4 py-2 rounded-full bg-green-primary-600 text-white text-sm font-semibold">
+              Toutes
+            </button>
+            <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition">
+              Partenariats
+            </button>
+            <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition">
+              Nouvelles collections
+            </button>
+            <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition">
+              Promos
+            </button>
+          </div>
+        </div>
+
         <div className="space-y-6">
           {news.map((item, index) => (
             <motion.div
@@ -74,7 +93,7 @@ export default function ActualitesPage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 flex gap-4 items-start"
+              className="bg-white rounded-2xl border border-gray-200 hover:border-green-primary-200 shadow-sm hover:shadow-md transition-all p-6 flex gap-4 items-start"
             >
               <div className="text-4xl flex-shrink-0">{item.emoji}</div>
               <div className="flex-grow">
@@ -87,11 +106,34 @@ export default function ActualitesPage() {
                   </span>
                 </div>
                 <p className="text-gray-600 mb-3">{item.description}</p>
-                <span className="text-gray-500 text-sm">{item.date}</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">{item.date}</span>
+                  <button className="text-sm font-semibold text-green-primary-600 hover:text-green-primary-700 transition">
+                    Voir le detail
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-14 rounded-2xl bg-gradient-to-r from-green-primary-600 to-green-primary-700 p-8 text-white text-center"
+        >
+          <h2 className="text-2xl font-bold mb-2">Recevoir nos nouvelles en priorité</h2>
+          <p className="text-green-100 mb-6">
+            Contacte notre équipe pour être notifié des offres, promotions et nouveaux produits.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-green-primary-700 font-bold hover:bg-green-50 transition"
+          >
+            Contacter l'equipe
+          </Link>
+        </motion.div>
       </section>
     </main>
   );

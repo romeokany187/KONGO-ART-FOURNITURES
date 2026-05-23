@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useInViewAnimation } from "@/hooks/useInViewAnimation";
+import Link from "next/link";
 
 export default function BlogPage() {
   const articles = [
@@ -50,32 +50,59 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Hero */}
       <motion.section
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-gradient-to-r from-green-primary-600 to-green-primary-700 text-white py-16 px-6"
+        className="bg-gradient-to-r from-green-primary-600 via-green-primary-700 to-emerald-700 text-white py-16 px-6"
       >
         <div className="max-w-7xl mx-auto text-center">
+          <p className="uppercase tracking-[0.25em] text-xs font-semibold text-green-100 mb-3">
+            Ressources & conseils
+          </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Notre Blog</h1>
-          <p className="text-green-primary-100 text-lg max-w-2xl mx-auto">
-            Articles, conseils et tendances autour du mobilier
+          <p className="text-green-100 text-lg max-w-3xl mx-auto">
+            Articles, guides pratiques et tendances pour aménager vos espaces avec élégance.
           </p>
         </div>
       </motion.section>
 
-      {/* Articles */}
       <section className="max-w-7xl mx-auto px-6 py-16">
+        <motion.article
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden mb-10"
+        >
+          <div className="grid lg:grid-cols-2">
+            <div className="bg-gradient-to-br from-green-primary-100 to-green-primary-50 min-h-[220px] flex items-center justify-center text-7xl">
+              {articles[0].emoji}
+            </div>
+            <div className="p-8">
+              <span className="inline-flex px-3 py-1 rounded-full bg-green-primary-50 text-green-primary-700 text-xs font-bold uppercase tracking-widest">
+                Article en vedette
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-4 mb-3">
+                {articles[0].title}
+              </h2>
+              <p className="text-gray-600 mb-4">{articles[0].excerpt}</p>
+              <p className="text-sm text-gray-500 mb-6">{articles[0].date}</p>
+              <button className="px-5 py-3 rounded-lg bg-green-primary-600 text-white font-semibold hover:bg-green-primary-700 transition">
+                Lire l'article
+              </button>
+            </div>
+          </div>
+        </motion.article>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map((article, index) => (
+          {articles.slice(1).map((article, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden cursor-pointer group"
+              className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-green-primary-200 transition-all overflow-hidden cursor-pointer group"
             >
               <div className="bg-gradient-to-br from-green-primary-100 to-green-primary-50 h-40 flex items-center justify-center text-6xl">
                 {article.emoji}
@@ -98,6 +125,24 @@ export default function BlogPage() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-14 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm"
+        >
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">Une question specifique ?</h3>
+          <p className="text-gray-600 mb-6">
+            Notre equipe peut vous conseiller gratuitement sur vos choix de meubles.
+          </p>
+          <Link
+            href="/services"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-green-primary-600 text-white font-bold hover:bg-green-primary-700 transition"
+          >
+            Decouvrir nos services
+          </Link>
+        </motion.div>
       </section>
     </main>
   );

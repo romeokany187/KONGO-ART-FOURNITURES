@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -40,23 +41,41 @@ export default function FAQPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Hero */}
       <motion.section
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-gradient-to-r from-green-primary-600 to-green-primary-700 text-white py-16 px-6"
+        className="bg-gradient-to-r from-green-primary-600 via-green-primary-700 to-emerald-700 text-white py-16 px-6"
       >
         <div className="max-w-7xl mx-auto text-center">
+          <p className="uppercase tracking-[0.25em] text-xs font-semibold text-green-100 mb-3">
+            Aide & assistance
+          </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">FAQ</h1>
-          <p className="text-green-primary-100 text-lg max-w-2xl mx-auto">
-            Réponses aux questions fréquemment posées
+          <p className="text-green-primary-100 text-lg max-w-3xl mx-auto">
+            Les réponses rapides aux questions les plus fréquentes sur nos services et nos commandes.
           </p>
         </div>
       </motion.section>
 
-      {/* FAQ */}
       <section className="max-w-4xl mx-auto px-6 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-white border border-gray-200 rounded-2xl p-5 mb-8 shadow-sm"
+        >
+          <label htmlFor="faq-search" className="block text-sm font-semibold text-gray-700 mb-2">
+            Rechercher une question
+          </label>
+          <input
+            id="faq-search"
+            type="text"
+            placeholder="Ex: livraison, retour, garantie..."
+            className="w-full rounded-lg border border-gray-300 px-4 py-3"
+          />
+        </motion.div>
+
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <motion.div
@@ -65,7 +84,7 @@ export default function FAQPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.05 }}
               viewport={{ once: true }}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
+              className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden"
             >
               <button
                 onClick={() =>
@@ -91,6 +110,24 @@ export default function FAQPage() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12 rounded-2xl bg-gradient-to-r from-green-primary-600 to-green-primary-700 text-white p-8 text-center"
+        >
+          <h2 className="text-2xl font-bold mb-2">Tu n'as pas trouve ta reponse ?</h2>
+          <p className="text-green-100 mb-6">
+            Ecris-nous directement et notre equipe t'accompagne dans les plus brefs delais.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-green-primary-700 font-bold hover:bg-green-50 transition"
+          >
+            Contacter le support
+          </Link>
+        </motion.div>
       </section>
     </main>
   );
