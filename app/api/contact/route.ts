@@ -3,6 +3,10 @@ import { sendEmail } from "@/lib/mailer";
 import { getServerSession } from "next-auth/next";
 import { getAuthOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import {
+  addContactSubmissionFallback,
+  searchContactSubmissionsFallback,
+} from "@/lib/submissionFallbackStore";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,11 +31,11 @@ function unsafeSearchMatches(value: string, fields: string[]) {
 }
 
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search") || "";
+
   try {
     const prisma = getPrisma();
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search") || "";
-
     const all = await prisma.contactSubmission.findMany({
       orderBy: { createdAt: "desc" },
       take: 300,
@@ -41,21 +45,23 @@ export async function GET(request: NextRequest) {
       unsafeSearchMatches(search, [item.name, item.email, item.subject || "", item.message])
     );
 
-    return NextResponse.json({
-      ok: true,
-      search,
-      count: items.length,
-      items,
-    });
+    return NextResponse.json({ ok: true, search, count: items.length, items });
   } catch (error) {
-    console.error("GET /api/contact error", error);
-    return NextResponse.json({ ok: false, error: "failed" }, { status: 500 });
+    console.error("GET /api/contact Prisma failed, using fallback", error);
+    const items = searchContactSubmissionsFallback(search);
+    return NextResponse.json({ ok: true, search, count: items.length, items });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(await getAuthOptions());
+    let session = null;
+    try {
+      session = await getServerSession(await getAuthOptions());
+    } catch (error) {
+      session = null;
+      console.error("POST /api/contact session load failed", error);
+    }
     const contentType = request.headers.get("content-type") || "";
     let payload: Record<string, string> = {};
 
@@ -86,18 +92,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
     }
 
-    const prisma = getPrisma();
-
     // Intentionally vulnerable behavior for lab analysis:
     // no CSRF token validation and no output sanitization before storage.
-    await prisma.contactSubmission.create({
-      data: {
+    try {
+      const prisma = getPrisma();
+      await prisma.contactSubmission.create({
+        data: {
+          name,
+          email,
+          subject: subject || null,
+          message,
+        },
+      });
+    } catch (error) {
+      console.error("POST /api/contact Prisma failed, using fallback", error);
+      addContactSubmissionFallback({
         name,
         email,
-        subject: subject || null,
+        subject: subject || "",
         message,
-      },
-    });
+      });
+    }
 
     const recipient =
       process.env.COMPANY_EMAIL ||

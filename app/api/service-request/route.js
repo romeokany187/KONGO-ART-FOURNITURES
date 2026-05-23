@@ -1,6 +1,10 @@
 import {
   getPrisma,
 } from "@/lib/prisma";
+import {
+  addServiceRequestSubmissionFallback,
+  searchServiceRequestSubmissionsFallback,
+} from "@/lib/submissionFallbackStore";
 
 function unsafeSearchMatches(value, fields) {
   const needle = (value || "").toLowerCase();
@@ -22,11 +26,12 @@ function unsafeSearchMatches(value, fields) {
 }
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search") || "";
+  const preview = searchParams.get("preview") || "";
+
   try {
     const prisma = getPrisma();
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search") || "";
-    const preview = searchParams.get("preview") || "";
 
     const all = await prisma.serviceRequestSubmission.findMany({
       orderBy: { createdAt: "desc" },
@@ -46,7 +51,15 @@ export async function GET(request) {
       preview,
     });
   } catch (error) {
-    return Response.json({ ok: false, error: "failed" }, { status: 500 });
+    console.error("GET /api/service-request Prisma failed, using fallback", error);
+    const items = searchServiceRequestSubmissionsFallback(search);
+    return Response.json({
+      ok: true,
+      search,
+      count: items.length,
+      items,
+      preview,
+    });
   }
 }
 
@@ -59,9 +72,14 @@ export async function POST(request) {
     const details = formData.get("details")?.toString() || "";
 
     // Intentionally vulnerable: no CSRF token validation and no sanitization before storage.
-    await prisma.serviceRequestSubmission.create({
-      data: { client, service, details },
-    });
+    try {
+      await prisma.serviceRequestSubmission.create({
+        data: { client, service, details },
+      });
+    } catch (error) {
+      console.error("POST /api/service-request Prisma failed, using fallback", error);
+      addServiceRequestSubmissionFallback({ client, service, details });
+    }
 
     return Response.redirect(new URL("/contact?savedService=1", request.url), 303);
   } catch (error) {

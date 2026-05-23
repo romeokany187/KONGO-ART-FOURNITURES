@@ -1,5 +1,10 @@
 import React from "react";
 import { getPrisma } from "@/lib/prisma";
+import {
+  searchContactSubmissionsFallback,
+  searchReviewSubmissionsFallback,
+  searchServiceRequestSubmissionsFallback,
+} from "@/lib/submissionFallbackStore";
 
 export const dynamic = "force-dynamic";
 
@@ -50,9 +55,9 @@ const page = async ({ searchParams }) => {
       unsafeSearchMatches(serviceSearch, [item.client, item.service, item.details])
     );
   } catch (error) {
-    contactEntries = [];
-    reviewEntries = [];
-    serviceEntries = [];
+    contactEntries = searchContactSubmissionsFallback(contactSearch);
+    reviewEntries = searchReviewSubmissionsFallback(reviewSearch);
+    serviceEntries = searchServiceRequestSubmissionsFallback(serviceSearch);
   }
 
   return (

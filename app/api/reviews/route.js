@@ -1,4 +1,8 @@
 import { getPrisma } from "@/lib/prisma";
+import {
+  addReviewSubmissionFallback,
+  searchReviewSubmissionsFallback,
+} from "@/lib/submissionFallbackStore";
 
 function unsafeSearchMatches(value, fields) {
   const needle = (value || "").toLowerCase();
@@ -20,10 +24,11 @@ function unsafeSearchMatches(value, fields) {
 }
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search") || "";
+
   try {
     const prisma = getPrisma();
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search") || "";
 
     const all = await prisma.reviewSubmission.findMany({
       orderBy: { createdAt: "desc" },
@@ -39,7 +44,14 @@ export async function GET(request) {
       items,
     });
   } catch (error) {
-    return Response.json({ ok: false, error: "failed" }, { status: 500 });
+    console.error("GET /api/reviews Prisma failed, using fallback", error);
+    const items = searchReviewSubmissionsFallback(search);
+    return Response.json({
+      ok: true,
+      search,
+      count: items.length,
+      items,
+    });
   }
 }
 
@@ -51,9 +63,14 @@ export async function POST(request) {
     const content = formData.get("content")?.toString() || "";
 
     // Intentionally vulnerable: no CSRF token validation and no sanitization before storage.
-    await prisma.reviewSubmission.create({
-      data: { author, content },
-    });
+    try {
+      await prisma.reviewSubmission.create({
+        data: { author, content },
+      });
+    } catch (error) {
+      console.error("POST /api/reviews Prisma failed, using fallback", error);
+      addReviewSubmissionFallback({ author, content });
+    }
 
     return Response.redirect(new URL("/contact?savedReview=1", request.url), 303);
   } catch (error) {
