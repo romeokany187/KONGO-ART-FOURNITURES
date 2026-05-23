@@ -110,10 +110,12 @@ const page = async ({ searchParams }) => {
           </button>
         </form>
 
-        {contactEntries.length > 0 && (
-          <div className="space-y-3 mt-6">
-            <h3 className="font-semibold">Derniers messages reçus</h3>
-            {contactEntries.map((item) => (
+        <div className="space-y-3 mt-6">
+          <h3 className="font-semibold">Derniers messages reçus</h3>
+          {contactEntries.length === 0 ? (
+            <p className="text-sm text-gray-500">Aucun message pour le moment.</p>
+          ) : (
+            contactEntries.map((item) => (
               <article key={item.id} className="border-l-4 border-green-600 pl-4 py-2">
                 <p className="font-semibold text-sm">{item.name}</p>
                 <div
@@ -121,9 +123,9 @@ const page = async ({ searchParams }) => {
                   dangerouslySetInnerHTML={{ __html: item.message || "" }}
                 />
               </article>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </section>
 
       <section className="space-y-4">
@@ -156,10 +158,12 @@ const page = async ({ searchParams }) => {
           </button>
         </form>
 
-        {reviewEntries.length > 0 && (
-          <div className="space-y-3 mt-6">
-            <h3 className="font-semibold">Témoignages clients</h3>
-            {reviewEntries.map((item) => (
+        <div className="space-y-3 mt-6">
+          <h3 className="font-semibold">Témoignages clients</h3>
+          {reviewEntries.length === 0 ? (
+            <p className="text-sm text-gray-500">Aucun avis publié pour le moment.</p>
+          ) : (
+            reviewEntries.map((item) => (
               <article key={item.id} className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
                 <p className="font-semibold text-sm">{item.author}</p>
                 <div
@@ -167,9 +171,9 @@ const page = async ({ searchParams }) => {
                   dangerouslySetInnerHTML={{ __html: item.content || "" }}
                 />
               </article>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </section>
 
       <section className="space-y-4">
@@ -212,10 +216,12 @@ const page = async ({ searchParams }) => {
           </button>
         </form>
 
-        {serviceEntries.length > 0 && (
-          <div className="space-y-3 mt-6">
-            <h3 className="font-semibold">Devis en cours de traitement</h3>
-            {serviceEntries.map((item) => (
+        <div className="space-y-3 mt-6">
+          <h3 className="font-semibold">Devis en cours de traitement</h3>
+          {serviceEntries.length === 0 ? (
+            <p className="text-sm text-gray-500">Aucune demande de devis pour le moment.</p>
+          ) : (
+            serviceEntries.map((item) => (
               <article key={item.id} className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-600">
                 <p className="font-semibold text-sm">{item.client} - {item.service}</p>
                 <div
@@ -223,9 +229,9 @@ const page = async ({ searchParams }) => {
                   dangerouslySetInnerHTML={{ __html: item.details || "" }}
                 />
               </article>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </section>
 
       <div className="text-center text-gray-600 text-sm mt-12 pt-8 border-t">
