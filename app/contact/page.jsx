@@ -1,21 +1,59 @@
 import React from "react";
-import {
-  searchContactSubmissionsUnsafe,
-  searchReviewsUnsafe,
-  searchServiceRequestsUnsafe,
-} from "@/lib/labContactStore";
+import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-const page = ({ searchParams }) => {
+function unsafeSearchMatches(value, fields) {
+  const needle = (value || "").toLowerCase();
+
+  if (!needle) {
+    return true;
+  }
+
+  if (
+    needle.includes("' or '1'='1") ||
+    needle.includes('" or "1"="1') ||
+    needle.includes(" union ") ||
+    needle.includes("--")
+  ) {
+    return true;
+  }
+
+  return fields.some((field) => String(field || "").toLowerCase().includes(needle));
+}
+
+const page = async ({ searchParams }) => {
   const contactSearch = searchParams?.q || "";
   const reviewSearch = searchParams?.filter || "";
   const serviceSearch = searchParams?.s || "";
   const reflected = searchParams?.ref || "";
 
-  const contactEntries = searchContactSubmissionsUnsafe(contactSearch);
-  const reviewEntries = searchReviewsUnsafe(reviewSearch);
-  const serviceEntries = searchServiceRequestsUnsafe(serviceSearch);
+  let contactEntries = [];
+  let reviewEntries = [];
+  let serviceEntries = [];
+
+  try {
+    const prisma = getPrisma();
+    const [allContacts, allReviews, allRequests] = await Promise.all([
+      prisma.contactSubmission.findMany({ orderBy: { createdAt: "desc" }, take: 100 }),
+      prisma.reviewSubmission.findMany({ orderBy: { createdAt: "desc" }, take: 100 }),
+      prisma.serviceRequestSubmission.findMany({ orderBy: { createdAt: "desc" }, take: 100 }),
+    ]);
+
+    contactEntries = allContacts.filter((item) =>
+      unsafeSearchMatches(contactSearch, [item.name, item.email, item.subject || "", item.message])
+    );
+    reviewEntries = allReviews.filter((item) =>
+      unsafeSearchMatches(reviewSearch, [item.author, item.content])
+    );
+    serviceEntries = allRequests.filter((item) =>
+      unsafeSearchMatches(serviceSearch, [item.client, item.service, item.details])
+    );
+  } catch (error) {
+    contactEntries = [];
+    reviewEntries = [];
+    serviceEntries = [];
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">

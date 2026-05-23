@@ -214,3 +214,34 @@ model CartItem {
   @@index([cartId])
 }
 
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([email])
+}
+
+model ReviewSubmission {
+  id        String   @id @default(cuid())
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model ServiceRequestSubmission {
+  id        String   @id @default(cuid())
+  client    String
+  service   String
+  details   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+

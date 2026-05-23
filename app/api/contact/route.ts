@@ -2,28 +2,102 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mailer";
 import { getServerSession } from "next-auth/next";
 import { getAuthOptions } from "@/lib/auth";
+import { getPrisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+function unsafeSearchMatches(value: string, fields: string[]) {
+  const needle = (value || "").toLowerCase();
+
+  if (!needle) {
+    return true;
+  }
+
+  if (
+    needle.includes("' or '1'='1") ||
+    needle.includes('" or "1"="1') ||
+    needle.includes(" union ") ||
+    needle.includes("--")
+  ) {
+    return true;
+  }
+
+  return fields.some((field) => String(field || "").toLowerCase().includes(needle));
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const prisma = getPrisma();
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search") || "";
+
+    const all = await prisma.contactSubmission.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 300,
+    });
+
+    const items = all.filter((item) =>
+      unsafeSearchMatches(search, [item.name, item.email, item.subject || "", item.message])
+    );
+
+    return NextResponse.json({
+      ok: true,
+      search,
+      count: items.length,
+      items,
+    });
+  } catch (error) {
+    console.error("GET /api/contact error", error);
+    return NextResponse.json({ ok: false, error: "failed" }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(await getAuthOptions());
-    const body = await request.json().catch(() => ({}));
-    const name =
-      typeof body?.name === "string" && body.name.trim()
-        ? body.name.trim()
-        : (session?.user?.name || "");
-    const email =
-      typeof body?.email === "string" && body.email.trim()
-        ? body.email.trim()
-        : (session?.user?.email || "");
-    const subject = typeof body?.subject === "string" ? body.subject.trim() : "";
-    const message = typeof body?.message === "string" ? body.message.trim() : "";
+    const contentType = request.headers.get("content-type") || "";
+    let payload: Record<string, string> = {};
 
-    if (!name || !email || !subject || !message) {
+    if (contentType.includes("application/json")) {
+      const body = await request.json().catch(() => ({}));
+      payload = {
+        name: typeof body?.name === "string" ? body.name : "",
+        email: typeof body?.email === "string" ? body.email : "",
+        subject: typeof body?.subject === "string" ? body.subject : "",
+        message: typeof body?.message === "string" ? body.message : "",
+      };
+    } else {
+      const formData = await request.formData();
+      payload = {
+        name: formData.get("name")?.toString() || "",
+        email: formData.get("email")?.toString() || "",
+        subject: formData.get("subject")?.toString() || "",
+        message: formData.get("message")?.toString() || "",
+      };
+    }
+
+    const name = payload.name.trim() || (session?.user?.name || "");
+    const email = payload.email.trim() || (session?.user?.email || "");
+    const subject = payload.subject.trim();
+    const message = payload.message.trim();
+
+    if (!name || !email || !message) {
       return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
     }
+
+    const prisma = getPrisma();
+
+    // Intentionally vulnerable behavior for lab analysis:
+    // no CSRF token validation and no output sanitization before storage.
+    await prisma.contactSubmission.create({
+      data: {
+        name,
+        email,
+        subject: subject || null,
+        message,
+      },
+    });
 
     const recipient =
       process.env.COMPANY_EMAIL ||
@@ -31,40 +105,44 @@ export async function POST(request: NextRequest) {
       process.env.INITIAL_ADMIN_EMAIL ||
       process.env.MAIL_FROM ||
       process.env.SMTP_USER;
-    if (!recipient) {
-      return NextResponse.json({ error: "Email entreprise non configuré" }, { status: 500 });
+    if (recipient) {
+      const effectiveSubject = subject || "Demande de contact";
+      const text = [
+        `Nouveau message de contact`,
+        `Nom: ${name}`,
+        `Email: ${email}`,
+        `Sujet: ${effectiveSubject}`,
+        `Message:`,
+        message,
+      ].join("\n");
+
+      const html = `
+        <h3>Nouveau message de contact</h3>
+        <p><strong>Nom:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Sujet:</strong> ${effectiveSubject}</p>
+        <p><strong>Message:</strong><br/>${message.replace(/\n/g, "<br/>")}</p>
+      `;
+
+      const result = await sendEmail({
+        to: recipient,
+        subject: `[Contact] ${effectiveSubject}`,
+        text,
+        html,
+        from: `${name} <${email}>`,
+        replyTo: email,
+      });
+
+      if (!result.ok) {
+        console.error("Contact email send failed", result.error);
+      }
     }
 
-    const text = [
-      `Nouveau message de contact`,
-      `Nom: ${name}`,
-      `Email: ${email}`,
-      `Sujet: ${subject}`,
-      `Message:`,
-      message,
-    ].join("\n");
-
-    const html = `
-      <h3>Nouveau message de contact</h3>
-      <p><strong>Nom:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Sujet:</strong> ${subject}</p>
-      <p><strong>Message:</strong><br/>${message.replace(/\n/g, "<br/>")}</p>
-    `;
-
-    const result = await sendEmail({
-      to: recipient,
-      subject: `[Contact] ${subject}`,
-      text,
-      html,
-      from: `${name} <${email}>`,
-      replyTo: email,
-    });
-    if (!result.ok) {
-      return NextResponse.json({ error: result.error || "Erreur envoi" }, { status: 500 });
+    if (contentType.includes("application/json")) {
+      return NextResponse.json({ success: true });
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.redirect(new URL("/contact?saved=1", request.url), 303);
   } catch (error) {
     console.error("POST /api/contact error", error);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
